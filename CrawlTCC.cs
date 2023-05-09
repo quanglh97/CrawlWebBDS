@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Web.UI.WebControls;
 
 namespace CrawlWebBDS
 {
@@ -109,7 +110,7 @@ namespace CrawlWebBDS
                             {
                                 var divPage = driver.FindElement(By.XPath("//div[@class='PageList']"));
                                 var lsSpanPage = divPage.FindElements(By.TagName("span"));
-                                for(int i = 0; i < lsSpanPage.Count; i++)
+                                for (int i = 0; i < lsSpanPage.Count; i++)
                                 {
                                     if (lsSpanPage[i].Text == page.ToString())
                                     {
@@ -126,10 +127,10 @@ namespace CrawlWebBDS
                                         }
                                     }
                                 }
-                                
+
                                 Thread.Sleep(2000);
                             }
-                            catch (Exception ex){ }
+                            catch (Exception ex) { }
                         }
                         for (int page = toPage; page >= fromPage; page--)
                         {
@@ -231,8 +232,9 @@ namespace CrawlWebBDS
                             }
                         }
                     }
+                    Logout(driver, m_oWorker, tinhTP);
                 }
-
+                
             }
             catch (Exception ex)
             {
@@ -426,6 +428,7 @@ namespace CrawlWebBDS
                                 }
                             }
                         }
+                        Logout(driver, m_oWorker, tinhTP);
                     }
                 }
                 catch (Exception ex)
@@ -559,7 +562,7 @@ namespace CrawlWebBDS
                     Thread.Sleep(1000);
                     driver.FindElement(By.Id("fancybox-close")).Click();
                 }
-                catch (Exception ex){ }
+                catch (Exception ex) { }
             }
 
         }
@@ -606,7 +609,7 @@ namespace CrawlWebBDS
                 {
                     throw new Exception("Dừng chương trình");
                 }
-                 if (autoLogin)
+                if (autoLogin)
                 {
                     try
                     {
@@ -633,13 +636,11 @@ namespace CrawlWebBDS
                             getCookie(driver, tinhTP);
                             break;
                         }
-                       
+
                     }
                     catch { }
                     Thread.Sleep(30 * 1000);
                 }
-                
-                
             }
         }
 
@@ -690,7 +691,7 @@ namespace CrawlWebBDS
                 {
                     try
                     {
-                        
+
                         var logOut = driver.FindElement(By.XPath("//li[@class='ui-state-default ui-corner-top ui-tabs-selected ui-state-active']"));
                         if (logOut != null)
                         {
@@ -708,14 +709,14 @@ namespace CrawlWebBDS
                 {
                     try
                     {
-                        
+
                         var logOut = driver.FindElement(By.XPath("//li[@class='ui-state-default ui-corner-top ui-tabs-selected ui-state-active']"));
                         if (logOut != null)
                         {
                             getCookie(driver, tinhTP);
                             break;
                         }
-                        
+
                     }
                     catch { }
                     Thread.Sleep(30 * 1000);
@@ -723,7 +724,29 @@ namespace CrawlWebBDS
             }
         }
 
-        public static void getCookie(ChromeDriver driver, string tinhTP)
+        public static void Logout(ChromeDriver driver, BackgroundWorker m_oWorker, string tinhTP)
+        {
+            var targetUrl = "";
+            if (tinhTP == "HN")
+            {
+                targetUrl = "http://hanoi.tinchinhchu.net.vn/";
+            }
+            else if (tinhTP == "HCM")
+            {
+                targetUrl = "http://hcm.tinchinhchu.net.vn/";
+            }
+            driver.Navigate().GoToUrl(targetUrl);
+            Thread.Sleep(3 * 1000);
+           
+            var logOut = driver.FindElement(By.Id("dnn_dnnLogin_loginLink"));
+            if (logOut != null)
+            {
+                logOut.Click();
+            }
+        }
+
+
+            public static void getCookie(ChromeDriver driver, string tinhTP)
         {
             try
             {

@@ -48,6 +48,11 @@ namespace CrawlWebBDS
         public static bool auto_crawl_ban_salenha = false;
         public static bool auto_crawl_thue_salenha = false;
 
+        public static string userHN;
+        public static string passHN;
+        public static string userHCM;
+        public static string passHCM;
+
         //public static BackgroundWorker m_oWorker = null;
 
 
@@ -106,7 +111,7 @@ namespace CrawlWebBDS
                         else if (type == 2)
                         {
                             cookies = cookies_thue;
-                            url = "https://thue.salenha.com/";
+                            url = "https://salenha.com/cho-thue";
                         }
                         if (cookies != null && cookies != "")
                         {
@@ -253,7 +258,7 @@ namespace CrawlWebBDS
                             else if (type == 2)
                             {
                                 cookies = cookies_thue;
-                                url = "https://thue.salenha.com/";
+                                url = "https://salenha.com/cho-thue";
                             }
 
                             if (cookies != null && cookies != "")
@@ -355,6 +360,12 @@ namespace CrawlWebBDS
             {
                 var newUrl = url;
                 var title = driver.FindElement(By.XPath("//div[@class='col-md-8']")).FindElements(By.TagName("h3"))[0].Text.Trim();
+                foreach(var rmWord in Contances.lsRemoveWordsSaleNha)
+                {
+                    if (title.Contains(rmWord)) Contances.bRMWordsSaleNha = true;
+                    title = title.Replace(rmWord, "");
+                }
+                
                 var price = driver.FindElements(By.XPath("//div[@class='col-sm-4']"))[0].FindElements(By.TagName("span"))[0].Text.Trim();
                 var area = driver.FindElements(By.XPath("//div[@class='col-sm-4']"))[1].FindElements(By.TagName("span"))[0].Text.Trim();
                 var tempEle = driver.FindElements(By.XPath("//select[@class='form-control category']"))[1];
@@ -394,6 +405,13 @@ namespace CrawlWebBDS
 
                 content += "<br>" + "Diện tích: " + area;
                 content += "<br>" + "Địa chỉ: " + address;
+
+                foreach (var rmWord in Contances.lsRemoveWordsSaleNha)
+                {
+                    if (content.Contains(rmWord)) Contances.bRMWordsSaleNha = true;
+                    content = content.Replace(rmWord, "");
+                }
+
                 try
                 {
                     driver.FindElements(By.XPath("//button[@class='btn btn-show-phone']"))[0].Click();
@@ -485,7 +503,7 @@ namespace CrawlWebBDS
             var fileCookie = $"cookiesBackup_{tinhTP}.txt";
             if (type == 2)
             {
-                url = "https://thue.salenha.com/";
+                url = "https://salenha.com/cho-thue";
                 fileCookie = $"cookiesBackupThue_{tinhTP}.txt";
             }
             var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", fileCookie);
@@ -512,13 +530,16 @@ namespace CrawlWebBDS
             while (true)
             {
                 m_oWorker.ReportProgress(6, "");
+                Thread.Sleep(3000);
+                AutoLogin(driver, tinhTP);
                 if (runScrape == false)
                 {
                     throw new Exception("Dừng chương trình");
                 }
                 try
                 {
-                    if (!driver.Url.Contains("login"))
+                    var dangXuat = driver.FindElement(By.XPath("//span[@class='glyphicon glyphicon-log-out']"));
+                    if (dangXuat != null)
                     {
                         getCookie(driver, type, tinhTP);
                         break;
@@ -526,6 +547,7 @@ namespace CrawlWebBDS
                 }
                 catch
                 {
+                    
                 }
                 Thread.Sleep(2 * 1000);
             }
@@ -537,7 +559,7 @@ namespace CrawlWebBDS
             var fileCookie = $"cookiesBackup_{tinhTP}.txt";
             if (type == 2)
             {
-                url = "https://thue.salenha.com/";
+                url = "https://salenha.com/cho-thue";
                 fileCookie = $"cookiesBackupThue_{tinhTP}.txt";
             }
             var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", fileCookie);
@@ -564,6 +586,8 @@ namespace CrawlWebBDS
             while (true)
             {
                 m_oWorker.ReportProgress(6, "");
+                Thread.Sleep(3000);
+                AutoLogin(driver, tinhTP);
                 if (runAuto == false)
                 {
                     throw new Exception("Dừng chương trình");
@@ -571,7 +595,8 @@ namespace CrawlWebBDS
 
                 try
                 {
-                    if (!driver.Url.Contains("login"))
+                    var dangXuat = driver.FindElement(By.XPath("//span[@class='glyphicon glyphicon-log-out']"));
+                    if (dangXuat != null)
                     {
                         getCookie(driver, type, tinhTP);
                         break;
@@ -579,6 +604,7 @@ namespace CrawlWebBDS
                 }
                 catch
                 {
+                    
                 }
                 Thread.Sleep(2 * 1000);
             }
@@ -648,6 +674,50 @@ namespace CrawlWebBDS
                 dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
             }
             return dictionaryString.TrimEnd(',', ' ') + "}";
+        }
+
+
+
+        public static bool AutoLogin(ChromeDriver driver, string tinhTP)
+        {
+            string user = "";
+            string pass = "";
+            string targetUrl = "https://salenha.com/login";
+            if (tinhTP.Contains("HN"))
+            {
+                user = userHN;
+                pass = passHN;
+                
+            }
+            else
+            {
+                user = userHCM;
+                pass = passHCM;
+             
+            }
+            try
+            {
+                driver.Navigate().GoToUrl(targetUrl);
+                Thread.Sleep(2 * 1000);
+                driver.FindElement(By.Name("username")).SendKeys(user);
+                Thread.Sleep(1000);
+                driver.FindElement(By.Name("pwd")).SendKeys(pass);
+                Thread.Sleep(1000);
+
+                driver.FindElements(By.TagName("button"))[0].Click();
+                Thread.Sleep(6000);
+                if (driver.Url.Contains("login"))
+                {
+                    throw new Exception();
+                }
+
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -69,6 +69,10 @@ namespace CrawlWebBDS
         BackgroundWorker m_oWorker_TCC = new BackgroundWorker();
         BackgroundWorker m_autoWorker_TCC = new BackgroundWorker();
 
+        //nguonnhamoi
+        BackgroundWorker m_oWorker_NNM = new BackgroundWorker();
+        BackgroundWorker m_autoWorker_NNM = new BackgroundWorker();
+
 
         BackgroundWorker statusWorker = new BackgroundWorker();
 
@@ -196,6 +200,21 @@ namespace CrawlWebBDS
             autoStartTime_TCC.ShowUpDown = true;
             autoStopTime_TCC.ShowUpDown = true;
 
+            //nguonnhamoi
+            m_oWorker_NNM.DoWork += myBackgroundWorker_DoWork_NNM;
+            m_oWorker_NNM.ProgressChanged += myBackgroundWorker_ProgressChanged_NNM;
+            m_oWorker_NNM.RunWorkerCompleted += myBackgroundWorker_RunWorkerCompleted_NNM;
+            m_oWorker_NNM.WorkerReportsProgress = true;
+            m_oWorker_NNM.WorkerSupportsCancellation = true;
+
+            m_autoWorker_NNM.DoWork += myBackgroundAutoWorker_DoWork_NNM;
+            m_autoWorker_NNM.ProgressChanged += myBackgroundAutoWorker_ProgressChanged_NNM;
+            m_autoWorker_NNM.RunWorkerCompleted += myBackgroundAutoWorker_RunWorkerCompleted_NNM;
+            m_autoWorker_NNM.WorkerReportsProgress = true;
+            m_autoWorker_NNM.WorkerSupportsCancellation = true;
+
+            autoStartTime_NNM.ShowUpDown = true;
+            autoStopTime_NNM.ShowUpDown = true;
 
             new Thread(new ParameterizedThreadStart(UpdateChromeDriver.CheckAnDownloadChromeDriver))
             {
@@ -213,18 +232,19 @@ namespace CrawlWebBDS
                 defaultSetting_SALENHA_VIP();
                 defaultSetting_NCC();
                 defaultSetting_NNCC();
-                defaultSetting_TCC();  
+                defaultSetting_TCC();
+                defaultSetting_NNM();
             }
             catch { }
 
-            SetTabHeader(tabControl1.TabPages[0], Color.FromArgb(255, 66, 66, 66));
-            for (int i = 1; i < tabControl1.TabPages.Count; i++)
+            SetTabHeader(TabControl1.TabPages[0], Color.FromArgb(255, 66, 66, 66));
+            for (int i = 1; i < TabControl1.TabPages.Count; i++)
             {
-                SetTabHeader(tabControl1.TabPages[i], Color.FromArgb(255, 171, 171, 171));
+                SetTabHeader(TabControl1.TabPages[i], Color.FromArgb(255, 171, 171, 171));
             }
 
-            this.tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
-            this.tabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControl1_DrawItem);
+            this.TabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+            this.TabControl1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControl1_DrawItem);
 
 
 
@@ -233,24 +253,24 @@ namespace CrawlWebBDS
         private void SetTabHeader(TabPage page, Color color)
         {
             TabColors[page] = color;
-            tabControl1.Invalidate();
+            TabControl1.Invalidate();
         }
         private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
             var g = e.Graphics;
-            var text = this.tabControl1.TabPages[e.Index].Text;
-            var sizeText = g.MeasureString(text, this.tabControl1.Font);
+            var text = this.TabControl1.TabPages[e.Index].Text;
+            var sizeText = g.MeasureString(text, this.TabControl1.Font);
 
             var x = e.Bounds.Left + 3;
             var y = e.Bounds.Top + (e.Bounds.Height - sizeText.Height) / 2;
 
             //g.DrawString(text, this.tabControl1.Font, Brushes.White, x, y);
             //e.DrawBackground();
-            using (Brush br = new SolidBrush(TabColors[tabControl1.TabPages[e.Index]]))
+            using (Brush br = new SolidBrush(TabColors[TabControl1.TabPages[e.Index]]))
             {
                 e.Graphics.FillRectangle(br, e.Bounds);
-                SizeF sz = e.Graphics.MeasureString(tabControl1.TabPages[e.Index].Text, e.Font);
-                e.Graphics.DrawString(tabControl1.TabPages[e.Index].Text, e.Font, Brushes.White, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
+                SizeF sz = e.Graphics.MeasureString(TabControl1.TabPages[e.Index].Text, e.Font);
+                e.Graphics.DrawString(TabControl1.TabPages[e.Index].Text, e.Font, Brushes.White, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1);
 
                 Rectangle rect = e.Bounds;
                 rect.Offset(0, 1);
@@ -262,11 +282,11 @@ namespace CrawlWebBDS
 
         private void tabControl1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            SetTabHeader(tabControl1.TabPages[tabControl1.SelectedIndex], Color.FromArgb(255, 66, 66, 66));
-            for (int i = 0; i < tabControl1.TabPages.Count; i++)
+            SetTabHeader(TabControl1.TabPages[TabControl1.SelectedIndex], Color.FromArgb(255, 66, 66, 66));
+            for (int i = 0; i < TabControl1.TabPages.Count; i++)
             {
-                if (i != tabControl1.SelectedIndex)
-                    SetTabHeader(tabControl1.TabPages[i], Color.FromArgb(255, 171, 171, 171));
+                if (i != TabControl1.SelectedIndex)
+                    SetTabHeader(TabControl1.TabPages[i], Color.FromArgb(255, 171, 171, 171));
             }
         }
 
@@ -390,6 +410,21 @@ namespace CrawlWebBDS
                 linkAPITBox1_LHCC_COM.Text = eleData[21];
                 linkAPITBox2_LHCC_COM.Text = eleData[22];
 
+                userHNTBox_LHCC_COM.Text = eleData[23];
+                passHNTBox_LHCC_COM.Text = eleData[24];
+
+                userHCMTBox_LHCC_COM.Text = eleData[25];
+                passHCMTBox_LHCC_COM.Text = eleData[26];
+
+                if (eleData[27] == "1")
+                    TKHNCBox_LHCC_COM.Checked = true;
+                else
+                    TKHNCBox_LHCC_COM.Checked = false;
+                if (eleData[28] == "1")
+                    TKHCMCBox_LHCC_COM.Checked = true;
+                else
+                    TKHCMCBox_LHCC_COM.Checked = false;
+
                 CrawlLienHeChinhChu.linkAPI1 = linkAPITBox1_LHCC_COM.Text;
                 CrawlLienHeChinhChu.linkAPI2 = linkAPITBox2_LHCC_COM.Text;
                 //scrape
@@ -411,9 +446,9 @@ namespace CrawlWebBDS
             {
                 if (CrawlLienHeChinhChu.runScrape || CrawlLienHeChinhChu.runAuto)
                 {
-                    if(CrawlLienHeChinhChu.runScrape || CrawlLienHeChinhChu.runningAuto)
+                    if (CrawlLienHeChinhChu.runScrape || CrawlLienHeChinhChu.runningAuto)
                         statusWorker.ReportProgress(1, "true");
-                    else 
+                    else
                         statusWorker.ReportProgress(1, "true2");
                 }
                 else
@@ -493,15 +528,27 @@ namespace CrawlWebBDS
                     statusWorker.ReportProgress(7, "false");
                 }
 
+                if (CrawlNNM.runScrape || CrawlNNM.runAuto)
+                {
+                    if (CrawlNNM.runScrape || CrawlNNM.runningAuto)
+                        statusWorker.ReportProgress(8, "true");
+                    else
+                        statusWorker.ReportProgress(8, "true2");
+                }
+                else
+                {
+                    statusWorker.ReportProgress(8, "false");
+                }
+
                 Thread.Sleep(3000);
             }
         }
         void myBackgroundWorker_ProgressChanged_Status(object sender, ProgressChangedEventArgs e)
         {
             if (e.ProgressPercentage == 1)
-            { 
-                var status = e.UserState.ToString(); 
-                if(status == "true")
+            {
+                var status = e.UserState.ToString();
+                if (status == "true")
                 {
                     LLCCStatusBtn.BackColor = Color.White;
                 }
@@ -608,6 +655,22 @@ namespace CrawlWebBDS
                 else
                 {
                     TCCStatusBtn.BackColor = Color.Red;
+                }
+            }
+            if (e.ProgressPercentage == 8)
+            {
+                var status = e.UserState.ToString();
+                if (status == "true")
+                {
+                    NNMStatusBtn.BackColor = Color.White;
+                }
+                else if (status == "true2")
+                {
+                    NNMStatusBtn.BackColor = Color.Blue;
+                }
+                else
+                {
+                    NNMStatusBtn.BackColor = Color.Red;
                 }
             }
         }
@@ -823,7 +886,19 @@ namespace CrawlWebBDS
                 CrawlLienHeChinhChu.tinh.Add("TPHCM");
             }
 
+            if (autoLoginCBox_LHCC.Checked)
+            {
+                CrawlLienHeChinhChu.autoLogin = true;
+            }
+            else
+            {
+                CrawlLienHeChinhChu.autoLogin = false;
+            }
+
             CrawlLienHeChinhChu.runScrape = true;
+
+            CrawlLienHeChinhChu.userHN = userHNTBox_LHCC_COM.Text;
+            CrawlLienHeChinhChu.passHN = passHNTBox_LHCC_COM.Text;
 
             StatusTBox_LHCC_COM.Text = "bắt đầu chạy";
 
@@ -874,10 +949,20 @@ namespace CrawlWebBDS
             var svlinkAPITBox1 = linkAPITBox1_LHCC_COM.Text;
             var svlinkAPITBox2 = linkAPITBox2_LHCC_COM.Text;
 
+            var userHN = userHNTBox_LHCC_COM.Text;
+            var passHN = passHNTBox_LHCC_COM.Text;
+
+            var userHCM = userHCMTBox_LHCC_COM.Text;
+            var passHCM = userHCMTBox_LHCC_COM.Text;
+
+            var TKHN = TKHNCBox_LHCC_COM.Checked ? "1" : "0";
+            var TKHCM = TKHCMCBox_LHCC_COM.Checked ? "1" : "0";
+
             var data = svAutoFromPage + "|" + svAutoToPage + "|" + svautoStartTime + "|" + svautoStopTime + "|" + svT2 + "|" + svT3 + "|"
                 + svT4 + "|" + svT5 + "|" + svT6 + "|" + svT7 + "|" + svCN + "|" + svautoTimeGetNew + "|"
                 + svcheckLoginTime + "|" + svautoHNCBox + "|" + svautoHCMCBox + "|" + svscrapeToPage + "|" + svscrapeFromPage + "|" + svHNCBox + "|"
-                + svHCMCBox + "|" + svtimeBetweenNewFrom + "|" + svtimeBetweenNewTo + "|" + svlinkAPITBox1 + "|" + svlinkAPITBox2;
+                + svHCMCBox + "|" + svtimeBetweenNewFrom + "|" + svtimeBetweenNewTo + "|" + svlinkAPITBox1 + "|" + svlinkAPITBox2 + "|"
+                + userHN + "|" + passHN + "|" + userHCM + "|" + passHCM + "|" + TKHN + "|" + TKHCM;
 
             var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LHCC_COM");
             if (!Directory.Exists(pathStringFolder))
@@ -911,8 +996,20 @@ namespace CrawlWebBDS
                 CrawlLienHeChinhChu.autoTinh.Add("TPHCM");
             }
 
+            if (autoLoginCBox_LHCC.Checked)
+            {
+                CrawlLienHeChinhChu.autoLogin = true;
+            }
+            else
+            {
+                CrawlLienHeChinhChu.autoLogin = false;
+            }
+
             CrawlLienHeChinhChu.beginTime = autoStartTime_LHCC_COM.Value;
             CrawlLienHeChinhChu.endTime = autoStopTime_LHCC_COM.Value;
+
+            CrawlLienHeChinhChu.userHN = userHNTBox_LHCC_COM.Text;
+            CrawlLienHeChinhChu.passHN = passHNTBox_LHCC_COM.Text;
 
             CrawlLienHeChinhChu.dayinWeek.Clear();
             if (monday_LHCC_COM.Checked)
@@ -1495,6 +1592,12 @@ namespace CrawlWebBDS
                 else
                     TKHCMCBox_SALENHA.Checked = false;
 
+                userHNTBox_SALENHA.Text = eleData[25];
+                passHNTBox_SALENHA.Text = eleData[26];
+
+                userHCMTBox_SALENHA.Text = eleData[25];
+                passHCMTBox_SALENHA.Text = eleData[26];
+
                 CrawlSALENHA.linkAPI1 = linkAPITBox1_SALENHA.Text;
                 CrawlSALENHA.linkAPI2 = linkAPITBox2_SALENHA.Text;
                 //scrape
@@ -1598,6 +1701,8 @@ namespace CrawlWebBDS
             {
                 StatusTBox_SALENHA.Text = "Đang đợi login";
             }
+
+            existSaleNhaCBox.Checked = Contances.bRMWordsSaleNha;
         }
 
         void myBackgroundAutoWorker_ProgressChanged_SALENHA(object sender, ProgressChangedEventArgs e)
@@ -1681,6 +1786,8 @@ namespace CrawlWebBDS
             {
                 autoStatusTBox_SALENHA.Text = "Đang đợi login";
             }
+
+            existSaleNhaCBox.Checked = Contances.bRMWordsSaleNha;
         }
 
         void myBackgroundWorker_RunWorkerCompleted_SALENHA(object sender, RunWorkerCompletedEventArgs e)
@@ -1708,6 +1815,12 @@ namespace CrawlWebBDS
         {
             scrapeStartBtn_SALENHA.Enabled = false;
             scrapeStopBtn_SALENHA.Enabled = true;
+
+            CrawlSALENHA.userHN = userHNTBox_SALENHA.Text;
+            CrawlSALENHA.passHN = passHNTBox_SALENHA.Text;
+
+            CrawlSALENHA.userHCM = userHCMTBox_SALENHA.Text;
+            CrawlSALENHA.passHCM = passHCMTBox_SALENHA.Text;
 
             CrawlSALENHA.linkAPI1 = linkAPITBox1_SALENHA.Text;
             CrawlSALENHA.linkAPI2 = linkAPITBox2_SALENHA.Text;
@@ -1758,6 +1871,12 @@ namespace CrawlWebBDS
         {
             autoStartBtn_SALENHA.Enabled = false;
             autoStopBtn_SALENHA.Enabled = true;
+
+            CrawlSALENHA.userHN = userHNTBox_SALENHA.Text;
+            CrawlSALENHA.passHN = passHNTBox_SALENHA.Text;
+
+            CrawlSALENHA.userHCM = userHCMTBox_SALENHA.Text;
+            CrawlSALENHA.passHCM = passHCMTBox_SALENHA.Text;
 
             CrawlSALENHA.linkAPI1 = linkAPITBox1_SALENHA.Text;
             CrawlSALENHA.linkAPI2 = linkAPITBox2_SALENHA.Text;
@@ -1861,11 +1980,20 @@ namespace CrawlWebBDS
             var TKHN = TKHNCBox_SALENHA.Checked ? "1" : "0";
             var TKHCM = TKHCMCBox_SALENHA.Checked ? "1" : "0";
 
+            var userHN = userHNTBox_SALENHA.Text;
+            var passHN = passHNTBox_SALENHA.Text;
+
+            var userHCM = userHCMTBox_SALENHA.Text;
+            var passHCM = passHCMTBox_SALENHA.Text;
+
+
             var data = svAutoFromPage + "|" + svAutoToPage + "|" + svautoStartTime + "|" + svautoStopTime + "|" + svT2 + "|" + svT3 + "|"
                 + svT4 + "|" + svT5 + "|" + svT6 + "|" + svT7 + "|" + svCN + "|" + svautoTimeGetNew + "|"
                 + svcheckLoginTime + "|" + svautoHNCBox + "|" + svautoHCMCBox + "|" + svscrapeToPage + "|" + svscrapeFromPage + "|" + svHNCBox + "|"
                 + svHCMCBox + "|" + svtimeBetweenNewFrom + "|" + svtimeBetweenNewTo + "|" + svlinkAPITBox1 + "|" + svlinkAPITBox2
-                + "|" + TKHN + "|" + TKHCM;
+                + "|" + TKHN + "|" + TKHCM
+                + "|" + userHN + "|" + passHN
+                + "|" + userHCM + "|" + passHCM;
 
             var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA");
             if (!Directory.Exists(pathStringFolder))
@@ -3803,6 +3931,535 @@ namespace CrawlWebBDS
 
             var pathSetting = System.IO.Path.Combine(pathStringFolder, "Setting.txt");
             File.WriteAllText(pathSetting, data);
+        }
+        //NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN//NNM.VN
+        void defaultSetting_NNM()
+        {
+            dataGridViewNotification_NNM.RowHeadersVisible = false;
+            var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM");
+
+            if (!Directory.Exists(pathStringFolder))
+            {
+                Directory.CreateDirectory(pathStringFolder);
+            }
+            var fileSetting = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM", "Setting.txt");
+            var fileStatus = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM", "status.txt");
+            var keyCaptchaPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "keyCaptcha.txt");
+            if (File.Exists(fileStatus))
+            {
+                var data = File.ReadAllText(fileStatus);
+                StatusTBox_NNM.Text = data;
+            }
+
+            if (File.Exists(keyCaptchaPath))
+            {
+                CaptchaHelper.apiKeyCaptcha = File.ReadAllText(keyCaptchaPath).Trim();
+            }
+
+            var fileStatusAuto = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM", "status_auto.txt");
+            if (File.Exists(fileStatusAuto))
+            {
+                var data = File.ReadAllText(fileStatusAuto);
+                autoStatusTBox_NNM.Text = data;
+            }
+
+            //var fileSetting = AppDomain.CurrentDomain.BaseDirectory + "Setting.txt";
+            if (File.Exists(fileSetting))
+            {
+                var data = File.ReadAllText(fileSetting);
+                var eleData = data.Split('|');
+                //tudong
+                autoFromPage_NNM.Value = Int32.Parse(eleData[0]);
+                autoToPage_NNM.Value = Int32.Parse(eleData[1]);
+                autoStartTime_NNM.Value = DateTime.Parse(eleData[2]);
+                autoStartTime_NNM.Value = DateTime.Parse(eleData[3]);
+                if (eleData[4] == "1")
+                    monday_NNM.Checked = true;
+                else
+                    monday_NNM.Checked = false;
+                if (eleData[5] == "1")
+                    tuesday_NNM.Checked = true;
+                else
+                    tuesday_NNM.Checked = false;
+                if (eleData[6] == "1")
+                    wenesday_NNM.Checked = true;
+                else
+                    wenesday_NNM.Checked = false;
+                if (eleData[7] == "1")
+                    thusday_NNM.Checked = true;
+                else
+                    thusday_NNM.Checked = false;
+                if (eleData[8] == "1")
+                    friday_NNM.Checked = true;
+                else
+                    friday_NNM.Checked = false;
+                if (eleData[9] == "1")
+                    satuday_NNM.Checked = true;
+                else
+                    satuday_NNM.Checked = false;
+                if (eleData[10] == "1")
+                    sunday_NNM.Checked = true;
+                else
+                    sunday_NNM.Checked = false;
+
+                autoTimeGetNew_NNM.Value = Int32.Parse(eleData[11]);
+                checkLoginTime_NNM.Value = Int32.Parse(eleData[12]);
+
+                //thu cong
+                scrapeToPage_NNM.Value = Int32.Parse(eleData[13]);
+                scrapeFromPage_NNM.Value = Int32.Parse(eleData[14]);
+
+                //Cai dat chung
+                timeBetweenNewFrom_NNM.Value = Int32.Parse(eleData[15]);
+                timeBetweenNewTo_NNM.Value = Int32.Parse(eleData[16]);
+                linkAPITBox1_NNM.Text = eleData[17];
+                linkAPITBox2_NNM.Text = eleData[18];
+
+                userHNTBox_NNM.Text = eleData[19];
+                passHNTBox_NNM.Text = eleData[20];
+
+                userHCMTBox_NNM.Text = eleData[21];
+                passHCMTBox_NNM.Text = eleData[22];
+
+                if (eleData[23] == "1")
+                    TKHNCBox_NNM.Checked = true;
+                else
+                    TKHNCBox_NNM.Checked = false;
+                if (eleData[24] == "1")
+                    TKHCMCBox_NNM.Checked = true;
+                else
+                    TKHCMCBox_NNM.Checked = false;
+
+                if (eleData[25] == "1")
+                    layXuoiRBtn_NNM.Checked = true;
+                else
+                    layNguocRBtn_NNM.Checked = true;
+
+                CrawlNNM.linkAPI1 = linkAPITBox1_NNM.Text;
+                CrawlNNM.linkAPI2 = linkAPITBox2_NNM.Text;
+                //scrape
+                CrawlNNM.fromPage = (int)scrapeFromPage_NNM.Value;
+                CrawlNNM.toPage = (int)scrapeToPage_NNM.Value;
+                CrawlNNM.timeBetweenNewFrom = (int)timeBetweenNewFrom_NNM.Value;
+                CrawlNNM.timeBetweenNewTo = (int)timeBetweenNewTo_NNM.Value;
+                //auto
+            }
+
+        }
+
+        void myBackgroundWorker_DoWork_NNM(object sender, DoWorkEventArgs e)
+        {
+            CrawlNNM.runScrape = true;
+            CrawlNNM.ScrapeRunCrawl(m_oWorker_NNM);
+        }
+
+        void myBackgroundAutoWorker_DoWork_NNM(object sender, DoWorkEventArgs e)
+        {
+            CrawlNNM.runAuto = true;
+            CrawlNNM.AutoRunCrawl(m_autoWorker_NNM);
+        }
+
+
+
+        void myBackgroundWorker_ProgressChanged_NNM(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 0)
+            {
+                StatusTBox_NNM.Text = "đang chạy";
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin thủ công";
+                var url = e.UserState.ToString();
+
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 1", "xong", time, type, url };
+                StatusTBox_NNM.Text = "đang chạy, đã đẩy thành công: " + dataGridViewNotification_NNM.Rows.Count.ToString();
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Black;
+
+            }
+            else if (e.ProgressPercentage == 1)
+            {
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin thủ công";
+                var url = e.UserState.ToString();
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 1", "lỗi", time, type, url };
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Red;
+                //dataGridViewNotification.Rows.Add(row1);
+            }
+            else if (e.ProgressPercentage == 2)
+            {
+                var dt = DateTime.Now;
+                StatusTBox_NNM.Text = "chạy xong thủ công lúc: " + dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                scrapeStartBtn_NNM.Enabled = true;
+                scrapeStopBtn_NNM.Enabled = false;
+                var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM");
+                if (!Directory.Exists(pathStringFolder))
+                {
+                    Directory.CreateDirectory(pathStringFolder);
+                }
+
+                var pathStatus = System.IO.Path.Combine(pathStringFolder, "status.txt");
+                File.WriteAllText(pathStatus, StatusTBox_NNM.Text);
+            }
+            else if (e.ProgressPercentage == 3)
+            {
+                StatusTBox_NNM.Text = "đang chạy";
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin thủ công";
+                var url = e.UserState.ToString();
+
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 2", "xong", time, type, url };
+                StatusTBox_NNM.Text = "đang chạy, đã đẩy thành công: " + dataGridViewNotification_NNM.Rows.Count.ToString();
+                //dataGridViewNotification.Rows.Add(row1);
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Black;
+
+            }
+            else if (e.ProgressPercentage == 4)
+            {
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin thủ công";
+                var url = e.UserState.ToString();
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 2", "lỗi", time, type, url };
+                //dataGridViewNotification.Rows.Add(row1);
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Red;
+            }
+            else if (e.ProgressPercentage == 6)
+            {
+                StatusTBox_NNM.Text = "Đang đợi login";
+            }
+
+            existNNMCBox.Checked = Contances.bRMWordsNNM;
+        }
+
+        void myBackgroundAutoWorker_ProgressChanged_NNM(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage == 0)
+            {
+                autoStatusTBox_NNM.Text = "đang chạy";
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin tự động";
+                var url = e.UserState.ToString();
+                if (url.Contains("đang chạy"))
+                    return;
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 1", "xong", time, type, url };
+                autoStatusTBox_NNM.Text = "đang chạy, đã đẩy thành công: " + dataGridViewNotification_NNM.Rows.Count.ToString();
+                //dataGridViewNotification.Rows.Add(row1);
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Green;
+
+
+            }
+            else if (e.ProgressPercentage == 1)
+            {
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin tự động";
+                var url = e.UserState.ToString();
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 1", "lỗi", time, type, url };
+                //dataGridViewNotification.Rows.Add(row1);
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Red;
+
+            }
+            else if (e.ProgressPercentage == 2)
+            {
+                var dt = DateTime.Now;
+                autoStatusTBox_NNM.Text = "chạy xong tự động lúc: " + dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                autoStartBtn_NNM.Enabled = true;
+                autoStopBtn_NNM.Enabled = false;
+
+                var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM");
+                if (!Directory.Exists(pathStringFolder))
+                {
+                    Directory.CreateDirectory(pathStringFolder);
+                }
+
+                var pathStatus = System.IO.Path.Combine(pathStringFolder, "status_auto.txt");
+                File.WriteAllText(pathStatus, autoStatusTBox_NNM.Text);
+            }
+            else if (e.ProgressPercentage == 5)
+            {
+                autoStatusTBox_NNM.Text = e.UserState.ToString();
+                autoStartBtn_NNM.Enabled = false;
+                autoStopBtn_NNM.Enabled = true;
+            }
+            else if (e.ProgressPercentage == 3)
+            {
+                autoStatusTBox_NNM.Text = "đang chạy";
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin tự động";
+                var url = e.UserState.ToString();
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 2", "xong", time, type, url };
+                autoStatusTBox_NNM.Text = "đang chạy, đã đẩy thành công: " + dataGridViewNotification_NNM.Rows.Count.ToString();
+                //dataGridViewNotification.Rows.Add(row1);
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Blue;
+
+
+            }
+            else if (e.ProgressPercentage == 4)
+            {
+                var dt = DateTime.Now;
+                var time = dt.ToShortTimeString() + " - " + dt.ToShortDateString();
+                var type = "đẩy tin tự động";
+                var url = e.UserState.ToString();
+                string[] row1 = new string[] { dataGridViewNotification_NNM.Rows.Count.ToString(), "Server 2", "lỗi", time, type, url };
+                //dataGridViewNotification.Rows.Add(row1);
+                dataGridViewNotification_NNM.Rows.Insert(0, row1);
+                dataGridViewNotification_NNM.Rows[0].DefaultCellStyle.ForeColor = Color.Red;
+
+            }
+            else if (e.ProgressPercentage == 6)
+            {
+                autoStatusTBox_NNM.Text = "Đang đợi login";
+            }
+
+            existNNMCBox.Checked = Contances.bRMWordsNNM;
+        }
+
+        void myBackgroundWorker_RunWorkerCompleted_NNM(object sender, RunWorkerCompletedEventArgs e)
+        {
+            scrapeStartBtn_NNM.Enabled = true;
+            scrapeStopBtn_NNM.Enabled = false;
+            //MessageBox.Show(this, "DỪNG THÀNH CÔNG CHẠY THỦ CÔNG");
+            CrawlNNM.runScrape = false;
+        }
+
+        void myBackgroundAutoWorker_RunWorkerCompleted_NNM(object sender, RunWorkerCompletedEventArgs e)
+        {
+            autoStartBtn_NNM.Enabled = true;
+            autoStopBtn_NNM.Enabled = false;
+            //MessageBox.Show(this, "DỪNG THÀNH CÔNG CHẠY TỰ ĐỘNG");
+            CrawlNNM.runAuto = false;
+        }
+
+        private void scrapeStartBtn_NNM_Click(object sender, EventArgs e)
+        {
+            scrapeStartBtn_NNM.Enabled = false;
+            scrapeStopBtn_NNM.Enabled = true;
+            if (layXuoiRBtn_NNM.Checked)
+            {
+                CrawlNNM.layXuoiMode = true;
+            }
+            else
+            {
+                CrawlNNM.layXuoiMode = false;
+            }
+
+            CrawlNNM.userHN = userHNTBox_NNM.Text;
+            CrawlNNM.passHN = passHNTBox_NNM.Text;
+
+            CrawlNNM.userHCM = userHCMTBox_NNM.Text;
+            CrawlNNM.passHCM = passHCMTBox_NNM.Text;
+
+            CrawlNNM.linkAPI1 = linkAPITBox1_NNM.Text;
+            CrawlNNM.linkAPI2 = linkAPITBox2_NNM.Text;
+            //scrape
+            CrawlNNM.fromPage = (int)scrapeFromPage_NNM.Value;
+            CrawlNNM.toPage = (int)scrapeToPage_NNM.Value;
+            CrawlNNM.timeBetweenNewFrom = (int)timeBetweenNewFrom_NNM.Value;
+            CrawlNNM.timeBetweenNewTo = (int)timeBetweenNewTo_NNM.Value;
+            CrawlNNM.tinh.Clear();
+            if (TKHNCBox_NNM.Checked)
+            {
+                CrawlNNM.tinh.Add("HN");
+            }
+            if (TKHCMCBox_NNM.Checked)
+            {
+                CrawlNNM.tinh.Add("HCM");
+            }
+
+            CrawlNNM.runScrape = true;
+
+            if (AutoLoginCBox_NNM.Checked)
+            {
+                CrawlNNM.autoLogin = true;
+            }
+            else
+            {
+                CrawlNNM.autoLogin = false;
+            }
+
+            StatusTBox_NNM.Text = "bắt đầu chạy";
+
+            m_oWorker_NNM.RunWorkerAsync();
+        }
+
+        private void scrapeStopBtn_NNM_Click(object sender, EventArgs e)
+        {
+            scrapeStopBtn_NNM.Enabled = false;
+            CrawlNNM.runScrape = false;
+            //ProcessHelper.KillAllProcessTree("chromedriver");
+            m_oWorker_NNM.CancelAsync();
+            m_oWorker_NNM.Dispose();
+            StatusTBox_NNM.Text = "đang dừng chạy";
+        }
+
+        private void autoStartBtn_NNM_Click(object sender, EventArgs e)
+        {
+            autoStartBtn_NNM.Enabled = false;
+            autoStopBtn_NNM.Enabled = true;
+
+            if (layXuoiRBtn_NNM.Checked)
+            {
+                CrawlNNM.layXuoiMode = true;
+            }
+            else
+            {
+                CrawlNNM.layXuoiMode = false;
+            }
+
+            CrawlNNM.userHN = userHNTBox_NNM.Text;
+            CrawlNNM.passHN = passHNTBox_NNM.Text;
+
+            CrawlNNM.userHCM = userHCMTBox_NNM.Text;
+            CrawlNNM.passHCM = passHCMTBox_NNM.Text;
+
+            CrawlNNM.linkAPI1 = linkAPITBox1_NNM.Text;
+            CrawlNNM.linkAPI2 = linkAPITBox2_NNM.Text;
+            //scrape
+            CrawlNNM.autoFromPage = (int)autoFromPage_NNM.Value;
+            CrawlNNM.autoToPage = (int)autoToPage_NNM.Value;
+            CrawlNNM.timeBetweenNewFrom = (int)timeBetweenNewFrom_NNM.Value;
+            CrawlNNM.timeBetweenNewTo = (int)timeBetweenNewTo_NNM.Value;
+            CrawlNNM.autoTinh.Clear();
+            if (TKHNCBox_NNM.Checked)
+            {
+                CrawlNNM.autoTinh.Add("HN");
+            }
+            if (TKHCMCBox_NNM.Checked)
+            {
+                CrawlNNM.autoTinh.Add("HCM");
+            }
+
+            CrawlNNM.beginTime = autoStartTime_NNM.Value;
+            CrawlNNM.endTime = autoStopTime_NNM.Value;
+
+            CrawlNNM.dayinWeek.Clear();
+            if (monday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Monday);
+            if (tuesday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Tuesday);
+            if (wenesday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Wednesday);
+            if (thusday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Thursday);
+            if (friday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Friday);
+            if (satuday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Saturday);
+            if (sunday_NNM.Checked)
+                CrawlNNM.dayinWeek.Add((int)DayOfWeek.Sunday);
+
+            CrawlNNM.loopTime = (int)autoTimeGetNew_NNM.Value;
+
+            if (AutoLoginCBox_NNM.Checked)
+            {
+                CrawlNNM.autoLogin = true;
+            }
+            else
+            {
+                CrawlNNM.autoLogin = false;
+            }
+
+            autoStatusTBox_NNM.Text = "bắt đầu chạy";
+
+            m_autoWorker_NNM.RunWorkerAsync();
+        }
+
+        private void autoStopBtn_NNM_Click(object sender, EventArgs e)
+        {
+            autoStopBtn_NNM.Enabled = false;
+            CrawlNNM.runAuto = false;
+            //ProcessHelper.KillAllProcessTree("chromedriver");
+            m_autoWorker_NNM.CancelAsync();
+            m_autoWorker_NNM.Dispose();
+            //while (m_autoWorker.IsBusy)
+            //{
+            //    autoStatusTBox.Text = "đang dừng !!!!";
+            //    Thread.Sleep(2 * 1000);
+            //}
+            autoStatusTBox_NNM.Text = "đang dừng chạy";
+        }
+
+        private void DeleteNotificationBtn_NNM_Click(object sender, EventArgs e)
+        {
+            dataGridViewNotification_NNM.Rows.Clear();
+        }
+
+        private void SaveSettingBtn_NNM_Click(object sender, EventArgs e)
+        {
+            //tudong
+            var svAutoFromPage = autoFromPage_NNM.Value.ToString();
+            var svAutoToPage = autoToPage_NNM.Value.ToString();
+            var svautoStartTime = autoStartTime_NNM.Value.ToString();
+            var svautoStopTime = autoStartTime_NNM.Value.ToString();
+            var svT2 = monday_NNM.Checked ? "1" : "0";
+            var svT3 = tuesday_NNM.Checked ? "1" : "0";
+            var svT4 = wenesday_NNM.Checked ? "1" : "0";
+            var svT5 = thusday_NNM.Checked ? "1" : "0";
+            var svT6 = friday_NNM.Checked ? "1" : "0";
+            var svT7 = satuday_NNM.Checked ? "1" : "0";
+            var svCN = sunday_NNM.Checked ? "1" : "0";
+            var svautoTimeGetNew = autoTimeGetNew_NNM.Value.ToString();
+            var svcheckLoginTime = checkLoginTime_NNM.Value.ToString();
+            //var svautoHNCBox = autoHNCBox_NNM.Checked ? "1" : "0";
+            //var svautoHCMCBox = autoHCMCBox_NNM.Checked ? "1" : "0";
+            //thu cong
+            var svscrapeToPage = scrapeToPage_NNM.Value.ToString();
+            var svscrapeFromPage = scrapeFromPage_NNM.Value.ToString();
+            //var svHNCBox = HNCBox_NNM.Checked ? "1" : "0";
+            //var svHCMCBox = HCMCBox_NNM.Checked ? "1" : "0";
+            //Cai dat chung
+            var svtimeBetweenNewFrom = timeBetweenNewFrom_NNM.Value.ToString();
+            var svtimeBetweenNewTo = timeBetweenNewTo_NNM.Value.ToString();
+            var svlinkAPITBox1 = linkAPITBox1_NNM.Text;
+            var svlinkAPITBox2 = linkAPITBox2_NNM.Text;
+
+            var userHN = userHNTBox_NNM.Text;
+            var passHN = passHNTBox_NNM.Text;
+
+            var userHCM = userHCMTBox_NNM.Text;
+            var passHCM = passHCMTBox_NNM.Text;
+
+            var TKHN = TKHNCBox_NNM.Checked ? "1" : "0";
+            var TKHCM = TKHCMCBox_NNM.Checked ? "1" : "0";
+            var layxuoi = layXuoiRBtn_NNM.Checked ? "1" : "0";
+
+            var data = svAutoFromPage + "|" + svAutoToPage + "|" + svautoStartTime + "|" + svautoStopTime + "|" + svT2 + "|" + svT3 + "|"
+                + svT4 + "|" + svT5 + "|" + svT6 + "|" + svT7 + "|" + svCN + "|" + svautoTimeGetNew + "|"
+                + svcheckLoginTime + "|" + svscrapeToPage + "|" + svscrapeFromPage + "|" + svtimeBetweenNewFrom + "|" + svtimeBetweenNewTo + "|" + svlinkAPITBox1 + "|" + svlinkAPITBox2
+                + "|" + userHN + "|" + passHN + "|" + userHCM + "|" + passHCM
+                + "|" + TKHN + "|" + TKHCM + "|" + layxuoi;
+
+            var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM");
+            if (!Directory.Exists(pathStringFolder))
+            {
+                Directory.CreateDirectory(pathStringFolder);
+            }
+
+            var pathSetting = System.IO.Path.Combine(pathStringFolder, "Setting.txt");
+            File.WriteAllText(pathSetting, data);
+        }
+
+        private void RemoveWordBtn_Click(object sender, EventArgs e)
+        {
+            RemoveWordsForm rmForm = new RemoveWordsForm("salenha");
+            rmForm.ShowDialog();
+        }
+
+        private void RemoveWordNNMBtn_Click(object sender, EventArgs e)
+        {
+            RemoveWordsForm rmForm = new RemoveWordsForm("nguonnhamoi");
+            rmForm.ShowDialog();
         }
     }
 }

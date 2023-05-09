@@ -40,7 +40,12 @@ namespace CrawlWebBDS
         public static bool runAuto = false;
         public static bool runScrape = false;
         public static bool runningAuto = false;
+        public static bool autoLogin = false;
 
+        public static string userHN;
+        public static string passHN;
+        public static string userHCM;
+        public static string passHCM;
 
         public static Random rnd = new Random();
 
@@ -299,7 +304,7 @@ namespace CrawlWebBDS
             var province = lsInfoTag[3].Text;
             var createDate = lsInfoTag[4].Text;
             var district = lsInfoTag[5].Text;
-            var category = type.Contains("Bán")?"danh mục bán":"danh mục thuê";
+            var category = type.Contains("Bán") ? "danh mục bán" : "danh mục thuê";
             var lsContent = driver.FindElement(By.XPath("//div[@class='woocommerce-Tabs-panel woocommerce-Tabs-panel--description panel entry-content active']")).FindElements(By.TagName("li"));
             var content = "";
             for (int i = 0; i < lsContent.Count - 2; i++)
@@ -324,7 +329,7 @@ namespace CrawlWebBDS
             var bodyPhone = $"\"phone\":\"{phone.Split(':')[1]}\",";
             var bodyProvince = $"\"province\":\"{province.Split(':')[1]}\",";
             var bodyDistrict = $"\"district\":\"{district.Split(':')[1]}\"";
-            if(linkAPI1 != null && linkAPI1 != "")
+            if (linkAPI1 != null && linkAPI1 != "")
             {
                 var client = new RestClient(linkAPI1);
                 var request = new RestRequest(Method.POST);
@@ -400,13 +405,40 @@ namespace CrawlWebBDS
                 {
                     throw new Exception("Dừng chương trình");
                 }
-
-                if (driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                if (autoLogin)
                 {
-                    getCookie(driver);
-                    break;
+                    try
+                    {
+                        if (driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                        {
+                            getCookie(driver);
+                            break;
+                        }
+                        else
+                        {
+                            if (AutoLogin(driver))
+                            {
+                                getCookie(driver);
+                                break;
+                            }
+                                
+                        }
+                    }
+                    catch
+                    {
+                        AutoLogin(driver);
+                    }
+                    Thread.Sleep(3 * 1000);
                 }
-                Thread.Sleep(2 * 1000);
+                else
+                {
+                    if (driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                    {
+                        getCookie(driver);
+                        break;
+                    }
+                    Thread.Sleep(3 * 1000);
+                }
             }
         }
 
@@ -441,13 +473,40 @@ namespace CrawlWebBDS
                 {
                     throw new Exception("Dừng chương trình");
                 }
-
-                if (driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                if (autoLogin)
                 {
-                    getCookie(driver);
-                    break;
+                    try
+                    {
+                        if (driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                        {
+                            getCookie(driver);
+                            break;
+                        }
+                        else
+                        {
+                            if (AutoLogin(driver))
+                            {
+                                getCookie(driver);
+                                break;
+                            }
+
+                        }
+                    }
+                    catch
+                    {
+                        AutoLogin(driver);
+                    }
+                    Thread.Sleep(3 * 1000);
                 }
-                Thread.Sleep(2 * 1000);
+                else
+                {
+                    if (driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                    {
+                        getCookie(driver);
+                        break;
+                    }
+                    Thread.Sleep(3 * 1000);
+                }
             }
         }
 
@@ -479,15 +538,51 @@ namespace CrawlWebBDS
             return true;
         }
 
-        public static string DictionaryToString(Dictionary<string, string> dictionary)
+        public static bool AutoLogin(ChromeDriver driver)
         {
-            string dictionaryString = "{";
-            foreach (KeyValuePair<string, string> keyValues in dictionary)
+            string user = "";
+            string pass = "";
+            string targetUrl = "";
+
+            user = userHN;
+            pass = passHN;
+            targetUrl = "https://lienhechinhchu.com/member-login/";
+            driver.Navigate().GoToUrl(targetUrl);
+            Thread.Sleep(3 * 1000);
+            try
             {
-                dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
+                driver.FindElement(By.Id("iump_login_username")).SendKeys(user);
+                Thread.Sleep(1000);
+                driver.FindElement(By.Id("iump_login_password")).SendKeys(pass);
+                Thread.Sleep(1000);
+                driver.FindElement(By.Name("Submit")).Click();
+                Thread.Sleep(5000);
+                driver.Navigate().GoToUrl("https://lienhechinhchu.com/my-account/");
+                Thread.Sleep(3000);
+                if (!driver.Url.Contains("https://lienhechinhchu.com/my-account/"))
+                {
+
+                    throw new Exception();
+                }
+
             }
-            return dictionaryString.TrimEnd(',', ' ') + "}";
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
+
+    public static string DictionaryToString(Dictionary<string, string> dictionary)
+    {
+        string dictionaryString = "{";
+        foreach (KeyValuePair<string, string> keyValues in dictionary)
+        {
+            dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
+        }
+        return dictionaryString.TrimEnd(',', ' ') + "}";
     }
+
+}
 }

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.saveGuideInfoBtn = new System.Windows.Forms.Button();
             this.infoTBox = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.saveGuideInfoBtn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,14 +47,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Thông tin lưu trữ";
             // 
-            // infoTBox
-            // 
-            this.infoTBox.Location = new System.Drawing.Point(12, 19);
-            this.infoTBox.Multiline = true;
-            this.infoTBox.Name = "infoTBox";
-            this.infoTBox.Size = new System.Drawing.Size(776, 366);
-            this.infoTBox.TabIndex = 0;
-            // 
             // saveGuideInfoBtn
             // 
             this.saveGuideInfoBtn.BackColor = System.Drawing.Color.IndianRed;
@@ -65,6 +57,16 @@
             this.saveGuideInfoBtn.Text = "Save ";
             this.saveGuideInfoBtn.UseVisualStyleBackColor = false;
             this.saveGuideInfoBtn.Click += new System.EventHandler(this.saveGuideInfoBtn_Click);
+            // 
+            // infoTBox
+            // 
+            this.infoTBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoTBox.Location = new System.Drawing.Point(12, 19);
+            this.infoTBox.Multiline = true;
+            this.infoTBox.Name = "infoTBox";
+            this.infoTBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.infoTBox.Size = new System.Drawing.Size(776, 366);
+            this.infoTBox.TabIndex = 0;
             // 
             // GuideForm
             // 

@@ -122,7 +122,7 @@ namespace CrawlWebBDS
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Auto config lastest lỗi, vui lòng liên hệ admin để setup", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                //MessageBox.Show("Auto config lastest lỗi, vui lòng liên hệ admin để setup", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             }
 
         }

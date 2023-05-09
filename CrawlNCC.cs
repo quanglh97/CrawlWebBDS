@@ -213,7 +213,7 @@ namespace CrawlWebBDS
                         driver.Navigate().GoToUrl("https://nguonchinhchu.com/login.html");
                     }
                     WaitLoginAuto(driver, m_oWorker);
-                    for (int page = toPage - 1; page >= fromPage - 1; page--)
+                    for (int page = autoToPage - 1; page >= autoFromPage - 1; page--)
                     {
                         string url = $"https://nguonchinhchu.com/bds.html?pi=" + page.ToString();
                         driver.Navigate().GoToUrl(url);
