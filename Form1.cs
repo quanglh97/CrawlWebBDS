@@ -4461,5 +4461,15 @@ namespace CrawlWebBDS
             RemoveWordsForm rmForm = new RemoveWordsForm("nguonnhamoi");
             rmForm.ShowDialog();
         }
+
+        private void existNNMCBox_CheckedChanged(object sender, EventArgs e)
+        {
+           existNNMCBox.Checked = false;
+        }
+
+        private void existSaleNhaCBox_CheckedChanged(object sender, EventArgs e)
+        {
+            existSaleNhaCBox.Checked = false;
+        }
     }
 }

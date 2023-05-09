@@ -642,8 +642,8 @@ namespace CrawlWebBDS
             this.NNCCStatusBtn = new System.Windows.Forms.Button();
             this.TCCStatusBtn = new System.Windows.Forms.Button();
             this.NNMStatusBtn = new System.Windows.Forms.Button();
-            this.existSaleNhaCBox = new System.Windows.Forms.CheckBox();
-            this.existNNMCBox = new System.Windows.Forms.CheckBox();
+            this.existNNMCBox = new System.Windows.Forms.RadioButton();
+            this.existSaleNhaCBox = new System.Windows.Forms.RadioButton();
             this.TabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox38.SuspendLayout();
@@ -7627,27 +7627,29 @@ namespace CrawlWebBDS
             this.NNMStatusBtn.Text = "NNM";
             this.NNMStatusBtn.UseVisualStyleBackColor = false;
             // 
-            // existSaleNhaCBox
-            // 
-            this.existSaleNhaCBox.AutoSize = true;
-            this.existSaleNhaCBox.Enabled = false;
-            this.existSaleNhaCBox.Location = new System.Drawing.Point(137, 131);
-            this.existSaleNhaCBox.Name = "existSaleNhaCBox";
-            this.existSaleNhaCBox.Size = new System.Drawing.Size(87, 19);
-            this.existSaleNhaCBox.TabIndex = 39;
-            this.existSaleNhaCBox.Text = "Phát hiện";
-            this.existSaleNhaCBox.UseVisualStyleBackColor = true;
-            // 
             // existNNMCBox
             // 
             this.existNNMCBox.AutoSize = true;
-            this.existNNMCBox.Enabled = false;
-            this.existNNMCBox.Location = new System.Drawing.Point(129, 168);
+            this.existNNMCBox.Location = new System.Drawing.Point(116, 167);
             this.existNNMCBox.Name = "existNNMCBox";
-            this.existNNMCBox.Size = new System.Drawing.Size(87, 19);
-            this.existNNMCBox.TabIndex = 49;
+            this.existNNMCBox.Size = new System.Drawing.Size(86, 19);
+            this.existNNMCBox.TabIndex = 50;
+            this.existNNMCBox.TabStop = true;
             this.existNNMCBox.Text = "Phát hiện";
             this.existNNMCBox.UseVisualStyleBackColor = true;
+            this.existNNMCBox.CheckedChanged += new System.EventHandler(this.existNNMCBox_CheckedChanged);
+            // 
+            // existSaleNhaCBox
+            // 
+            this.existSaleNhaCBox.AutoSize = true;
+            this.existSaleNhaCBox.Location = new System.Drawing.Point(138, 130);
+            this.existSaleNhaCBox.Name = "existSaleNhaCBox";
+            this.existSaleNhaCBox.Size = new System.Drawing.Size(86, 19);
+            this.existSaleNhaCBox.TabIndex = 51;
+            this.existSaleNhaCBox.TabStop = true;
+            this.existSaleNhaCBox.Text = "Phát hiện";
+            this.existSaleNhaCBox.UseVisualStyleBackColor = true;
+            this.existSaleNhaCBox.CheckedChanged += new System.EventHandler(this.existSaleNhaCBox_CheckedChanged);
             // 
             // Form1
             // 
@@ -8458,8 +8460,8 @@ namespace CrawlWebBDS
         private System.Windows.Forms.Label label214;
         private System.Windows.Forms.Button RemoveWordSaleNhaBtn;
         private System.Windows.Forms.Button RemoveWordNNMBtn;
-        private System.Windows.Forms.CheckBox existSaleNhaCBox;
-        private System.Windows.Forms.CheckBox existNNMCBox;
+        private System.Windows.Forms.RadioButton existNNMCBox;
+        private System.Windows.Forms.RadioButton existSaleNhaCBox;
     }
 }
 

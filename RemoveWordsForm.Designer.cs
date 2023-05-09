@@ -37,12 +37,12 @@
             this.RMWTBox.Location = new System.Drawing.Point(12, 12);
             this.RMWTBox.Multiline = true;
             this.RMWTBox.Name = "RMWTBox";
-            this.RMWTBox.Size = new System.Drawing.Size(163, 236);
+            this.RMWTBox.Size = new System.Drawing.Size(179, 236);
             this.RMWTBox.TabIndex = 0;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(193, 252);
+            this.button1.Location = new System.Drawing.Point(116, 254);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -54,7 +54,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(280, 287);
+            this.ClientSize = new System.Drawing.Size(203, 287);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.RMWTBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
