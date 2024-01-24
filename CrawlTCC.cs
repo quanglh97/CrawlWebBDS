@@ -232,7 +232,11 @@ namespace CrawlWebBDS
                             }
                         }
                     }
-                    Logout(driver, m_oWorker, tinhTP);
+                    try
+                    {
+                        Logout(driver, m_oWorker, tinhTP);
+                    }
+                    catch { }
                 }
                 
             }
@@ -428,7 +432,12 @@ namespace CrawlWebBDS
                                 }
                             }
                         }
-                        Logout(driver, m_oWorker, tinhTP);
+                        try
+                        {
+                            Logout(driver, m_oWorker, tinhTP);
+                        }
+                        catch { }
+
                     }
                 }
                 catch (Exception ex)
@@ -480,7 +489,7 @@ namespace CrawlWebBDS
                 Thread.Sleep(2000);
                 var newUrl = url;
                 var title = driver.FindElement(By.Id("dnn_ctr453_Details_lblTitle")).Text.Trim();
-                var price = driver.FindElement(By.Id("dnn_ctr453_Details_lblPriceText")).Text.Trim();
+                var price = driver.FindElement(By.Id("dnn_ctr453_Details_lblPriceText")).Text.Trim().Split('/')[0];
                 var type = driver.FindElement(By.Id("dnn_ctr453_Details_lblType")).Text.Trim();
                 var province = driver.FindElement(By.Id("dnn_ctr453_Details_lblProvince")).Text;
                 var district = driver.FindElement(By.Id("dnn_ctr453_Details_lblDistrict")).Text.Trim();
@@ -738,9 +747,10 @@ namespace CrawlWebBDS
             driver.Navigate().GoToUrl(targetUrl);
             Thread.Sleep(3 * 1000);
            
-            var logOut = driver.FindElement(By.Id("dnn_dnnLogin_loginLink"));
+            var logOut = driver.FindElement(By.Id("dnn_dnnLogin_loginLink")); //dnn_dnnLogin_loginLink
             if (logOut != null)
             {
+                driver.Navigate ().GoToUrl(logOut.GetAttribute("href"));  
                 logOut.Click();
             }
         }

@@ -152,16 +152,19 @@ namespace CrawlWebBDS
                                 {
                                     throw new Exception("Dừng chương trình thủ công");
                                 }
+                                if (lsLinkNew[i] !=null && lsLinkNew[i].Length > 30)
+                                {
+                                    driver.Navigate().GoToUrl(lsLinkNew[i]);
+                                    Thread.Sleep(2 * 1000);
+                                    //Task.Run(() =>
+                                    //{
+                                    //    Crawl(m_oWorker, driver, lsLinkNew[i]);
+                                    //});
 
-                                driver.Navigate().GoToUrl(lsLinkNew[i]);
-                                Thread.Sleep(2 * 1000);
-                                //Task.Run(() =>
-                                //{
-                                //    Crawl(m_oWorker, driver, lsLinkNew[i]);
-                                //});
-                                Crawl(m_oWorker, driver, lsLinkNew[i]);
+                                    Crawl(m_oWorker, driver, lsLinkNew[i]);
 
-                                Thread.Sleep(sleepTime * 1000);
+                                    Thread.Sleep(sleepTime * 1000);
+                                }
                             }
                         }
                     }
@@ -359,12 +362,18 @@ namespace CrawlWebBDS
             try
             {
                 var newUrl = url;
-                var title = driver.FindElement(By.XPath("//div[@class='col-md-8']")).FindElements(By.TagName("h3"))[0].Text.Trim();
-                foreach(var rmWord in Contances.lsRemoveWordsSaleNha)
+                var title = "";
+                try
                 {
-                    if (title.Contains(rmWord)) Contances.bRMWordsSaleNha = true;
-                    title = title.Replace(rmWord, "");
+                    title = driver.FindElement(By.XPath("//div[@class='col-md-8']")).FindElements(By.TagName("h3"))[0].Text.Trim();
+                    if (title != null || title != "") { }
+                    foreach (var rmWord in Contances.lsRemoveWordsSaleNha)
+                    {
+                        if (title.Contains(rmWord)) Contances.bRMWordsSaleNha = true;
+                        title = title.Replace(rmWord, "");
+                    }
                 }
+                catch { }
                 
                 var price = driver.FindElements(By.XPath("//div[@class='col-sm-4']"))[0].FindElements(By.TagName("span"))[0].Text.Trim();
                 var area = driver.FindElements(By.XPath("//div[@class='col-sm-4']"))[1].FindElements(By.TagName("span"))[0].Text.Trim();
@@ -415,7 +424,7 @@ namespace CrawlWebBDS
                 try
                 {
                     driver.FindElements(By.XPath("//button[@class='btn btn-show-phone']"))[0].Click();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(4000);
                 }
                 catch { }
                 var phone = driver.FindElements(By.XPath("//a[@class='p-show']"))[0].Text.Trim();

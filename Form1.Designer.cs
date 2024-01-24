@@ -207,6 +207,7 @@ namespace CrawlWebBDS
             this.dataGridViewTextBoxColumn17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn18 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.existSaleNhaCBox = new System.Windows.Forms.RadioButton();
             this.RemoveWordSaleNhaBtn = new System.Windows.Forms.Button();
             this.TKHCMCBox_SALENHA = new System.Windows.Forms.CheckBox();
             this.TKHNCBox_SALENHA = new System.Windows.Forms.CheckBox();
@@ -580,6 +581,7 @@ namespace CrawlWebBDS
             this.dataGridViewTextBoxColumn41 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn42 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox39 = new System.Windows.Forms.GroupBox();
+            this.existNNMCBox = new System.Windows.Forms.RadioButton();
             this.RemoveWordNNMBtn = new System.Windows.Forms.Button();
             this.AutoLoginCBox_NNM = new System.Windows.Forms.CheckBox();
             this.layNguocRBtn_NNM = new System.Windows.Forms.RadioButton();
@@ -642,8 +644,6 @@ namespace CrawlWebBDS
             this.NNCCStatusBtn = new System.Windows.Forms.Button();
             this.TCCStatusBtn = new System.Windows.Forms.Button();
             this.NNMStatusBtn = new System.Windows.Forms.Button();
-            this.existNNMCBox = new System.Windows.Forms.RadioButton();
-            this.existSaleNhaCBox = new System.Windows.Forms.RadioButton();
             this.TabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox38.SuspendLayout();
@@ -2752,6 +2752,18 @@ namespace CrawlWebBDS
             this.groupBox18.TabStop = false;
             this.groupBox18.Text = "Cài đặt chung";
             // 
+            // existSaleNhaCBox
+            // 
+            this.existSaleNhaCBox.AutoSize = true;
+            this.existSaleNhaCBox.Location = new System.Drawing.Point(138, 130);
+            this.existSaleNhaCBox.Name = "existSaleNhaCBox";
+            this.existSaleNhaCBox.Size = new System.Drawing.Size(86, 19);
+            this.existSaleNhaCBox.TabIndex = 51;
+            this.existSaleNhaCBox.TabStop = true;
+            this.existSaleNhaCBox.Text = "Phát hiện";
+            this.existSaleNhaCBox.UseVisualStyleBackColor = true;
+            this.existSaleNhaCBox.Click += new System.EventHandler(this.existSaleNhaCBox_Click);
+            // 
             // RemoveWordSaleNhaBtn
             // 
             this.RemoveWordSaleNhaBtn.BackColor = System.Drawing.SystemColors.WindowFrame;
@@ -3372,7 +3384,7 @@ namespace CrawlWebBDS
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(1105, 566);
             this.tabPage4.TabIndex = 4;
-            this.tabPage4.Text = "SaleNhaVip.com";
+            this.tabPage4.Text = "NhaChinhChu.com";
             // 
             // label114
             // 
@@ -3381,9 +3393,9 @@ namespace CrawlWebBDS
             this.label114.ForeColor = System.Drawing.Color.Gold;
             this.label114.Location = new System.Drawing.Point(742, 0);
             this.label114.Name = "label114";
-            this.label114.Size = new System.Drawing.Size(189, 20);
+            this.label114.Size = new System.Drawing.Size(233, 20);
             this.label114.TabIndex = 11;
-            this.label114.Text = "http://salenha.vip.com/";
+            this.label114.Text = "https://nhachinhchu.com.vn/";
             // 
             // groupBox11
             // 
@@ -6909,6 +6921,18 @@ namespace CrawlWebBDS
             this.groupBox39.TabStop = false;
             this.groupBox39.Text = "Cài đặt chung";
             // 
+            // existNNMCBox
+            // 
+            this.existNNMCBox.AutoSize = true;
+            this.existNNMCBox.Location = new System.Drawing.Point(116, 167);
+            this.existNNMCBox.Name = "existNNMCBox";
+            this.existNNMCBox.Size = new System.Drawing.Size(86, 19);
+            this.existNNMCBox.TabIndex = 50;
+            this.existNNMCBox.TabStop = true;
+            this.existNNMCBox.Text = "Phát hiện";
+            this.existNNMCBox.UseVisualStyleBackColor = true;
+            this.existNNMCBox.Click += new System.EventHandler(this.existNNMCBox_Click);
+            // 
             // RemoveWordNNMBtn
             // 
             this.RemoveWordNNMBtn.BackColor = System.Drawing.SystemColors.WindowFrame;
@@ -7626,30 +7650,6 @@ namespace CrawlWebBDS
             this.NNMStatusBtn.TabIndex = 10;
             this.NNMStatusBtn.Text = "NNM";
             this.NNMStatusBtn.UseVisualStyleBackColor = false;
-            // 
-            // existNNMCBox
-            // 
-            this.existNNMCBox.AutoSize = true;
-            this.existNNMCBox.Location = new System.Drawing.Point(116, 167);
-            this.existNNMCBox.Name = "existNNMCBox";
-            this.existNNMCBox.Size = new System.Drawing.Size(86, 19);
-            this.existNNMCBox.TabIndex = 50;
-            this.existNNMCBox.TabStop = true;
-            this.existNNMCBox.Text = "Phát hiện";
-            this.existNNMCBox.UseVisualStyleBackColor = true;
-            this.existNNMCBox.CheckedChanged += new System.EventHandler(this.existNNMCBox_CheckedChanged);
-            // 
-            // existSaleNhaCBox
-            // 
-            this.existSaleNhaCBox.AutoSize = true;
-            this.existSaleNhaCBox.Location = new System.Drawing.Point(138, 130);
-            this.existSaleNhaCBox.Name = "existSaleNhaCBox";
-            this.existSaleNhaCBox.Size = new System.Drawing.Size(86, 19);
-            this.existSaleNhaCBox.TabIndex = 51;
-            this.existSaleNhaCBox.TabStop = true;
-            this.existSaleNhaCBox.Text = "Phát hiện";
-            this.existSaleNhaCBox.UseVisualStyleBackColor = true;
-            this.existSaleNhaCBox.CheckedChanged += new System.EventHandler(this.existSaleNhaCBox_CheckedChanged);
             // 
             // Form1
             // 

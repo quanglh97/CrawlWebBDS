@@ -88,7 +88,7 @@ namespace CrawlWebBDS
                     lsType.Add(1);
                 if (crawl_thue_salenha_vip)
                     lsType.Add(2);
-                for (int tp = 0; tp < tinh.Count; tp++)
+                for (int tp = 0; tp < tinh.Count; tp++) 
                 {
                     var tinhTP = tinh[tp];
                     for (int j = 0; j < lsType.Count; j++)
@@ -135,7 +135,7 @@ namespace CrawlWebBDS
                             var lsSdtBtn = driver.FindElements(By.XPath("//button[@class='btn btn-show-phone']"));
                             for (int i = 0; i < lsSdtBtn.Count; i++)
                             {
-                                var x = rnd.Next(700, 1800);
+                                var x = rnd.Next(700, 1800);      
                                 lsSdtBtn[i].Click();
                                 Thread.Sleep(x);
                             }

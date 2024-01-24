@@ -19,6 +19,7 @@ namespace CrawlWebBDS
             InitializeComponent();
             this.web = web;
             getGuiData();
+            setGuideData();
         }
 
         private void button1_Click(object sender, EventArgs e)

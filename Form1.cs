@@ -216,10 +216,10 @@ namespace CrawlWebBDS
             autoStartTime_NNM.ShowUpDown = true;
             autoStopTime_NNM.ShowUpDown = true;
 
-            new Thread(new ParameterizedThreadStart(UpdateChromeDriver.CheckAnDownloadChromeDriver))
-            {
-                IsBackground = true,
-            }.Start();
+            //new Thread(new ParameterizedThreadStart(UpdateChromeDriver.CheckAnDownloadChromeDriver))
+            //{
+            //    IsBackground = true,
+            //}.Start();
 
 
             try
@@ -1505,6 +1505,12 @@ namespace CrawlWebBDS
             }
             var fileSetting = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", "Setting.txt");
             var fileStatus = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", "status.txt");
+            var pathStringRMData = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RemoveSaleNhaData.txt");
+            if (File.Exists(pathStringRMData))
+            {
+                var data = File.ReadAllText(pathStringRMData);
+                Contances.lsRemoveWordsSaleNha = data.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+            }
             if (File.Exists(fileStatus))
             {
                 var data = File.ReadAllText(fileStatus);
@@ -1595,8 +1601,8 @@ namespace CrawlWebBDS
                 userHNTBox_SALENHA.Text = eleData[25];
                 passHNTBox_SALENHA.Text = eleData[26];
 
-                userHCMTBox_SALENHA.Text = eleData[25];
-                passHCMTBox_SALENHA.Text = eleData[26];
+                userHCMTBox_SALENHA.Text = eleData[27];
+                passHCMTBox_SALENHA.Text = eleData[28];
 
                 CrawlSALENHA.linkAPI1 = linkAPITBox1_SALENHA.Text;
                 CrawlSALENHA.linkAPI2 = linkAPITBox2_SALENHA.Text;
@@ -3945,6 +3951,12 @@ namespace CrawlWebBDS
             var fileSetting = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM", "Setting.txt");
             var fileStatus = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NNM", "status.txt");
             var keyCaptchaPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "keyCaptcha.txt");
+            var pathStringRMData = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RemoveNNMData.txt");
+            if (File.Exists(pathStringRMData))
+            {
+                var data = File.ReadAllText(pathStringRMData);
+                Contances.lsRemoveWordsNNM = data.Split(new[] { "\r\n" }, StringSplitOptions.None).ToList();
+            }
             if (File.Exists(fileStatus))
             {
                 var data = File.ReadAllText(fileStatus);
@@ -4462,14 +4474,14 @@ namespace CrawlWebBDS
             rmForm.ShowDialog();
         }
 
-        private void existNNMCBox_CheckedChanged(object sender, EventArgs e)
-        {
-           existNNMCBox.Checked = false;
-        }
-
-        private void existSaleNhaCBox_CheckedChanged(object sender, EventArgs e)
+        private void existSaleNhaCBox_Click(object sender, EventArgs e)
         {
             existSaleNhaCBox.Checked = false;
+        }
+
+        private void existNNMCBox_Click(object sender, EventArgs e)
+        {
+            existNNMCBox.Checked = false;
         }
     }
 }
