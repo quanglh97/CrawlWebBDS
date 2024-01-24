@@ -94,7 +94,7 @@ namespace CrawlWebBDS
                     for (int j = 0; j < lsType.Count; j++)
                     {
                         var type = lsType[j];
-                        var cookies = "";
+                        var cookies = ""; 
                         var url = "";
                         if (type == 1)
                         {
