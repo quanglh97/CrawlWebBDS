@@ -262,6 +262,17 @@ namespace CrawlWebBDS
             this.autoFromPage_SALENHA = new System.Windows.Forms.NumericUpDown();
             this.label88 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox46 = new System.Windows.Forms.GroupBox();
+            this.label215 = new System.Windows.Forms.Label();
+            this.label216 = new System.Windows.Forms.Label();
+            this.passHCMTBox_NhaChinhChuComVn = new System.Windows.Forms.TextBox();
+            this.userHCMTBox_NhaChinhChuComVn = new System.Windows.Forms.TextBox();
+            this.label217 = new System.Windows.Forms.Label();
+            this.label218 = new System.Windows.Forms.Label();
+            this.passHNTBox_NhaChinhChuComVn = new System.Windows.Forms.TextBox();
+            this.userHNTBox_NhaChinhChuComVn = new System.Windows.Forms.TextBox();
+            this.label219 = new System.Windows.Forms.Label();
+            this.label220 = new System.Windows.Forms.Label();
             this.label114 = new System.Windows.Forms.Label();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.scrapeStopBtn_SALENHA_VIP = new System.Windows.Forms.Button();
@@ -693,6 +704,7 @@ namespace CrawlWebBDS
             ((System.ComponentModel.ISupportInitialize)(this.autoToPage_SALENHA)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.autoFromPage_SALENHA)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.groupBox46.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNotification_SALENHA_VIP)).BeginInit();
@@ -3373,6 +3385,7 @@ namespace CrawlWebBDS
             // tabPage4
             // 
             this.tabPage4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(66)))), ((int)(((byte)(66)))));
+            this.tabPage4.Controls.Add(this.groupBox46);
             this.tabPage4.Controls.Add(this.label114);
             this.tabPage4.Controls.Add(this.groupBox11);
             this.tabPage4.Controls.Add(this.groupBox12);
@@ -3385,6 +3398,109 @@ namespace CrawlWebBDS
             this.tabPage4.Size = new System.Drawing.Size(1105, 566);
             this.tabPage4.TabIndex = 4;
             this.tabPage4.Text = "NhaChinhChu.com";
+            // 
+            // groupBox46
+            // 
+            this.groupBox46.Controls.Add(this.label215);
+            this.groupBox46.Controls.Add(this.label216);
+            this.groupBox46.Controls.Add(this.passHCMTBox_NhaChinhChuComVn);
+            this.groupBox46.Controls.Add(this.userHCMTBox_NhaChinhChuComVn);
+            this.groupBox46.Controls.Add(this.label217);
+            this.groupBox46.Controls.Add(this.label218);
+            this.groupBox46.Controls.Add(this.passHNTBox_NhaChinhChuComVn);
+            this.groupBox46.Controls.Add(this.userHNTBox_NhaChinhChuComVn);
+            this.groupBox46.Controls.Add(this.label219);
+            this.groupBox46.Controls.Add(this.label220);
+            this.groupBox46.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox46.ForeColor = System.Drawing.SystemColors.Control;
+            this.groupBox46.Location = new System.Drawing.Point(558, 360);
+            this.groupBox46.Name = "groupBox46";
+            this.groupBox46.Size = new System.Drawing.Size(547, 119);
+            this.groupBox46.TabIndex = 25;
+            this.groupBox46.TabStop = false;
+            this.groupBox46.Text = "thông tin tài khoản";
+            // 
+            // label215
+            // 
+            this.label215.AutoSize = true;
+            this.label215.Location = new System.Drawing.Point(24, 81);
+            this.label215.Name = "label215";
+            this.label215.Size = new System.Drawing.Size(101, 15);
+            this.label215.TabIndex = 44;
+            this.label215.Text = "tài khoản HCM";
+            // 
+            // label216
+            // 
+            this.label216.AutoSize = true;
+            this.label216.Location = new System.Drawing.Point(24, 43);
+            this.label216.Name = "label216";
+            this.label216.Size = new System.Drawing.Size(90, 15);
+            this.label216.TabIndex = 43;
+            this.label216.Text = "tài khoản HN";
+            // 
+            // passHCMTBox_NhaChinhChuComVn
+            // 
+            this.passHCMTBox_NhaChinhChuComVn.Location = new System.Drawing.Point(360, 78);
+            this.passHCMTBox_NhaChinhChuComVn.Name = "passHCMTBox_NhaChinhChuComVn";
+            this.passHCMTBox_NhaChinhChuComVn.Size = new System.Drawing.Size(176, 21);
+            this.passHCMTBox_NhaChinhChuComVn.TabIndex = 42;
+            // 
+            // userHCMTBox_NhaChinhChuComVn
+            // 
+            this.userHCMTBox_NhaChinhChuComVn.Location = new System.Drawing.Point(178, 78);
+            this.userHCMTBox_NhaChinhChuComVn.Name = "userHCMTBox_NhaChinhChuComVn";
+            this.userHCMTBox_NhaChinhChuComVn.Size = new System.Drawing.Size(176, 21);
+            this.userHCMTBox_NhaChinhChuComVn.TabIndex = 41;
+            // 
+            // label217
+            // 
+            this.label217.AutoSize = true;
+            this.label217.Location = new System.Drawing.Point(175, 63);
+            this.label217.Name = "label217";
+            this.label217.Size = new System.Drawing.Size(35, 15);
+            this.label217.TabIndex = 39;
+            this.label217.Text = "user";
+            // 
+            // label218
+            // 
+            this.label218.AutoSize = true;
+            this.label218.Location = new System.Drawing.Point(357, 63);
+            this.label218.Name = "label218";
+            this.label218.Size = new System.Drawing.Size(37, 15);
+            this.label218.TabIndex = 40;
+            this.label218.Text = "pass";
+            // 
+            // passHNTBox_NhaChinhChuComVn
+            // 
+            this.passHNTBox_NhaChinhChuComVn.Location = new System.Drawing.Point(360, 37);
+            this.passHNTBox_NhaChinhChuComVn.Name = "passHNTBox_NhaChinhChuComVn";
+            this.passHNTBox_NhaChinhChuComVn.Size = new System.Drawing.Size(176, 21);
+            this.passHNTBox_NhaChinhChuComVn.TabIndex = 38;
+            // 
+            // userHNTBox_NhaChinhChuComVn
+            // 
+            this.userHNTBox_NhaChinhChuComVn.Location = new System.Drawing.Point(178, 37);
+            this.userHNTBox_NhaChinhChuComVn.Name = "userHNTBox_NhaChinhChuComVn";
+            this.userHNTBox_NhaChinhChuComVn.Size = new System.Drawing.Size(176, 21);
+            this.userHNTBox_NhaChinhChuComVn.TabIndex = 37;
+            // 
+            // label219
+            // 
+            this.label219.AutoSize = true;
+            this.label219.Location = new System.Drawing.Point(175, 19);
+            this.label219.Name = "label219";
+            this.label219.Size = new System.Drawing.Size(35, 15);
+            this.label219.TabIndex = 35;
+            this.label219.Text = "user";
+            // 
+            // label220
+            // 
+            this.label220.AutoSize = true;
+            this.label220.Location = new System.Drawing.Point(357, 19);
+            this.label220.Name = "label220";
+            this.label220.Size = new System.Drawing.Size(37, 15);
+            this.label220.TabIndex = 36;
+            this.label220.Text = "pass";
             // 
             // label114
             // 
@@ -3487,7 +3603,7 @@ namespace CrawlWebBDS
             this.groupBox12.ForeColor = System.Drawing.SystemColors.Control;
             this.groupBox12.Location = new System.Drawing.Point(558, 18);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(550, 450);
+            this.groupBox12.Size = new System.Drawing.Size(550, 338);
             this.groupBox12.TabIndex = 8;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Thông báo";
@@ -3502,10 +3618,11 @@ namespace CrawlWebBDS
             this.dataGridViewTextBoxColumn10,
             this.dataGridViewTextBoxColumn11,
             this.dataGridViewTextBoxColumn12});
+            this.dataGridViewNotification_SALENHA_VIP.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewNotification_SALENHA_VIP.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewNotification_SALENHA_VIP.Name = "dataGridViewNotification_SALENHA_VIP";
             this.dataGridViewNotification_SALENHA_VIP.RowHeadersWidth = 51;
-            this.dataGridViewNotification_SALENHA_VIP.Size = new System.Drawing.Size(544, 427);
+            this.dataGridViewNotification_SALENHA_VIP.Size = new System.Drawing.Size(544, 318);
             this.dataGridViewNotification_SALENHA_VIP.TabIndex = 0;
             // 
             // dataGridViewTextBoxColumn7
@@ -7592,7 +7709,7 @@ namespace CrawlWebBDS
             this.SAVipStatusBtn.Name = "SAVipStatusBtn";
             this.SAVipStatusBtn.Size = new System.Drawing.Size(87, 23);
             this.SAVipStatusBtn.TabIndex = 6;
-            this.SAVipStatusBtn.Text = "SAVIP";
+            this.SAVipStatusBtn.Text = "NCC.COM";
             this.SAVipStatusBtn.UseVisualStyleBackColor = false;
             // 
             // NCCStatusBtn
@@ -7740,6 +7857,8 @@ namespace CrawlWebBDS
             ((System.ComponentModel.ISupportInitialize)(this.autoFromPage_SALENHA)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.groupBox46.ResumeLayout(false);
+            this.groupBox46.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             this.groupBox12.ResumeLayout(false);
@@ -8462,6 +8581,17 @@ namespace CrawlWebBDS
         private System.Windows.Forms.Button RemoveWordNNMBtn;
         private System.Windows.Forms.RadioButton existNNMCBox;
         private System.Windows.Forms.RadioButton existSaleNhaCBox;
+        private System.Windows.Forms.GroupBox groupBox46;
+        private System.Windows.Forms.Label label215;
+        private System.Windows.Forms.Label label216;
+        private System.Windows.Forms.TextBox passHCMTBox_NhaChinhChuComVn;
+        private System.Windows.Forms.TextBox userHCMTBox_NhaChinhChuComVn;
+        private System.Windows.Forms.Label label217;
+        private System.Windows.Forms.Label label218;
+        private System.Windows.Forms.TextBox passHNTBox_NhaChinhChuComVn;
+        private System.Windows.Forms.TextBox userHNTBox_NhaChinhChuComVn;
+        private System.Windows.Forms.Label label219;
+        private System.Windows.Forms.Label label220;
     }
 }
 

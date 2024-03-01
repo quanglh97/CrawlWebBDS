@@ -11,6 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System.Web.UI.WebControls;
+using System.Security.Policy;
+using System.Linq.Expressions;
 
 namespace CrawlWebBDS
 {
@@ -46,6 +48,11 @@ namespace CrawlWebBDS
         public static bool auto_crawl_ban_salenha_vip = false;
         public static bool auto_crawl_thue_salenha_vip = false;
 
+        public static string userHN;
+        public static string passHN;
+        public static string userHCM;
+        public static string passHCM;
+
         //public static BackgroundWorker m_oWorker = null;
 
 
@@ -80,32 +87,24 @@ namespace CrawlWebBDS
 
                 ChromeDriverService service = ChromeDriverService.CreateDefaultService();
                 service.HideCommandPromptWindow = true;
-
-                //if (crawl_ban_salenha) { 
+                
                 driver = new ChromeDriver(service, options);
                 List<int> lsType = new List<int>();
                 if (crawl_ban_salenha_vip)
                     lsType.Add(1);
                 if (crawl_thue_salenha_vip)
                     lsType.Add(2);
-                for (int tp = 0; tp < tinh.Count; tp++) 
+                for (int tp = 0; tp < tinh.Count; tp++)
                 {
                     var tinhTP = tinh[tp];
                     for (int j = 0; j < lsType.Count; j++)
                     {
                         var type = lsType[j];
-                        var cookies = ""; 
+                        var cookies = "";
                         var url = "";
-                        if (type == 1)
-                        {
-                            cookies = cookies_ban;
-                            url = "https://salenha.com/";
-                        }
-                        else if (type == 2)
-                        {
-                            cookies = cookies_thue;
-                            url = "https://salenha.com/cho-thue";
-                        }
+                        cookies = cookies_ban;
+                        url = "https://nhachinhchu.com.vn/";
+
                         if (cookies != null && cookies != "")
                         {
                             driver.Navigate().GoToUrl(url);
@@ -124,78 +123,49 @@ namespace CrawlWebBDS
                             driver.Navigate().GoToUrl(url);
                         }
                         WaitLoginScrape(driver, m_oWorker, type, tinhTP);
-
+                        if(type ==1)
+                            driver.Navigate().GoToUrl("https://nhachinhchu.com.vn/product/list/100");
+                        else if (type ==2)
+                            driver.Navigate().GoToUrl("https://nhachinhchu.com.vn/product/list/200");
+                        Thread.Sleep(2000);
                         for (int page = toPage; page >= fromPage; page--)
                         {
-                            string urlCrawl = $"{url}?search=&page={page.ToString()}";
-                            driver.Navigate().GoToUrl(urlCrawl);
-                            Thread.Sleep(5 * 1000);
-                            var lsTagTitle = driver.FindElements(By.XPath("//div[@class='col-sm-11']"));
-
-                            var lsSdtBtn = driver.FindElements(By.XPath("//button[@class='btn btn-show-phone']"));
-                            for (int i = 0; i < lsSdtBtn.Count; i++)
+                            try
                             {
-                                var x = rnd.Next(700, 1800);      
-                                lsSdtBtn[i].Click();
-                                Thread.Sleep(x);
+                                driver.FindElement(By.XPath($"//a[@href='javascript:JumpTo({page})']")).Click();
+                            }
+                            catch
+                            {
                             }
 
-                            var lsViewMoreBtn = driver.FindElements(By.XPath("//a[@class='btn-view-more']"));
+                            Thread.Sleep(3000);
+                            var lsViewMoreBtn = driver.FindElements(By.XPath("//p[@class='pdt']"));
                             for (int i = 0; i < lsViewMoreBtn.Count; i++)
                             {
+                                if (CrawlSALENHA_VIP.runScrape == false) return;
                                 try
                                 {
                                     var x = rnd.Next(700, 1800);
                                     lsViewMoreBtn[i].Click();
                                     Thread.Sleep(x);
                                 }
-                                catch { }
+                                catch (Exception e){ 
+                                }
                             }
-                            var lsLoaiTin = driver.FindElements(By.XPath("//div[@class='col-xs-3 col-sm-3']"));//col-xs-3 col-sm-3
-                            var lsTinDiv = driver.FindElements(By.XPath("//div[@class='col-xs-9 col-sm-9']"));
 
-                            List<string> lsTin = new List<string>();
 
-                            for (int i = 0; i < lsTinDiv.Count; i++)
+
+
+                            var lsTr = driver.FindElements(By.XPath("//tr[@class='even']")).ToList();
+                            lsTr.AddRange(driver.FindElements(By.XPath("//tr[@class='odd']")).ToList());
+                            foreach (var tr in lsTr)
                             {
-                                var tempTin = lsTinDiv[i].Text.Split(new[] { "Thêm vào" }, StringSplitOptions.None)[0];
-                                tempTin = tempTin.Trim() + "\n" +lsLoaiTin[i].Text.Split('\n')[1];
-                                lsTin.Add(tempTin);
+                                if (CrawlSALENHA_VIP.runScrape == false) return;
+                                Crawl(m_oWorker, driver, tr);
+                                Thread.Sleep(5000);
                             }
 
-                            //for(int i = 0; i < lsTin.Count; i++)
-                            //{
-                            //    var tinUrl = driver.Url + "_Tin_" + i; 
-                            //    Crawl(m_oWorker, lsTin[i], tinUrl);
-                            //}
 
-
-                            //List<string> lsLinkNew = new List<string>();
-                            //foreach (var p in lsTagTitle)
-                            //{
-                            //    var href = p.FindElement(By.TagName("a")).GetAttribute("href");
-                            //    lsLinkNew.Add(href);
-                            //}
-
-                            //var sleepTime = rnd.Next(timeBetweenNewFrom, timeBetweenNewTo);
-                            //for (int i = 0; i < lsLinkNew.Count; i++)
-                            //{
-                            //    if (runScrape == false)
-                            //    {
-                            //        throw new Exception("Dừng chương trình thủ công");
-                            //    }
-
-                            //    driver.Navigate().GoToUrl(lsLinkNew[i]);
-                            //    Thread.Sleep(2 * 1000);
-                            //    //Task.Run(() =>
-                            //    //{
-                            //    //    Crawl(m_oWorker, driver, lsLinkNew[i]);
-                            //    //});
-
-                            //    Crawl(m_oWorker, driver, lsLinkNew[i]);
-
-                            //    Thread.Sleep(sleepTime * 1000);
-                            //}
                             var sleepTime = rnd.Next(timeBetweenNewFrom, timeBetweenNewTo);
                             Thread.Sleep(sleepTime * 1000);
                         }
@@ -284,16 +254,10 @@ namespace CrawlWebBDS
                             var type = lsType[i];
                             var cookies = "";
                             var url = "";
-                            if (type == 1)
-                            {
-                                cookies = cookies_ban;
-                                url = "https://salenha.com/";
-                            }
-                            else if (type == 2)
-                            {
-                                cookies = cookies_thue;
-                                url = "https://salenha.com/cho-thue";
-                            }
+                           
+                            cookies = cookies_ban;
+                            url = "https://nhachinhchu.com.vn/";
+
 
                             if (cookies != null && cookies != "")
                             {
@@ -315,35 +279,47 @@ namespace CrawlWebBDS
                                 driver.Navigate().GoToUrl(url);
                             }
                             WaitLoginAuto(driver, m_oWorker, type, tinhTP);
+                            if (type == 1)
+                                driver.Navigate().GoToUrl("https://nhachinhchu.com.vn/product/list/100");
+                            else if (type == 2)
+                                driver.Navigate().GoToUrl("https://nhachinhchu.com.vn/product/list/200");
+                            Thread.Sleep(2000);
                             for (int page = autoToPage; page >= autoFromPage; page--)
                             {
-                                string urlCrawl = $"{url}?search=&page={page.ToString()}";
-                                driver.Navigate().GoToUrl(urlCrawl);
-                                Thread.Sleep(5 * 1000);
-                                var lsTagTitle = driver.FindElements(By.XPath("//div[@class='col-xs-9 col-sm-9']"));
-                                List<string> lsLinkNew = new List<string>();
-                                foreach (var p in lsTagTitle)
+                                try
                                 {
-                                    var href = p.FindElement(By.TagName("a")).GetAttribute("href");
-                                    lsLinkNew.Add(href);
+                                    driver.FindElement(By.XPath($"//a[@href='javascript:JumpTo({page})']")).Click();
+                                }
+                                catch
+                                {
                                 }
 
-                                var sleepTime = rnd.Next(timeBetweenNewFrom, timeBetweenNewTo);
-                                for (int j = 0; j < lsLinkNew.Count; j++)
+                                Thread.Sleep(3000);
+                                var lsViewMoreBtn = driver.FindElements(By.XPath("//p[@class='pdt']"));
+                                for (int j = 0; j < lsViewMoreBtn.Count; j++)
                                 {
-                                    if (runAuto == false)
+                                    if (CrawlSALENHA_VIP.runAuto == false) return;
+                                    try
                                     {
-                                        throw new Exception("Dừng chương trình tự động");
+                                        var x = rnd.Next(700, 1800);
+                                        lsViewMoreBtn[j].Click();
+                                        Thread.Sleep(x);
                                     }
-                                    driver.Navigate().GoToUrl(lsLinkNew[j]);
-                                    Thread.Sleep(2 * 1000);
-                                    //Task.Run(() =>
-                                    //{
-                                    //    Crawl(m_oWorker, driver, lsLinkNew[i]);
-                                    //});
-                                    //Crawl(m_oWorker, driver, lsLinkNew[j]);
-                                    Thread.Sleep(sleepTime * 1000);
+                                    catch (Exception e)
+                                    {
+                                    }
                                 }
+
+                                var lsTr = driver.FindElements(By.XPath("//tr[@class='even']")).ToList();
+                                lsTr.AddRange(driver.FindElements(By.XPath("//tr[@class='odd']")).ToList());
+                                foreach (var tr in lsTr)
+                                {
+                                    if (CrawlSALENHA_VIP.runAuto == false) return;
+                                    Crawl(m_oWorker, driver, tr);
+                                    Thread.Sleep(5000);
+                                }
+                                var sleepTime = rnd.Next(timeBetweenNewFrom, timeBetweenNewTo);
+                                Thread.Sleep(sleepTime * 1000);
                             }
                         }
                     }
@@ -388,129 +364,136 @@ namespace CrawlWebBDS
             m_oWorker.ReportProgress(2, "");
         }
 
-        public static void Crawl(BackgroundWorker m_oWorker, string tin, string url)
+        public static void Crawl(BackgroundWorker m_oWorker, ChromeDriver driver, IWebElement Data)
         {
             try
             {
-                var newUrl = url;
-                var eleTin = tin.Split('\n');
-                var title = eleTin[0];
-                eleTin = eleTin.Where((val, idx) => idx != 0).ToArray();
-                var category = eleTin[eleTin.Length-1];
-                var address = eleTin[eleTin.Length - 2];
-                var phone = eleTin[eleTin.Length - 3];
-                var area = eleTin[eleTin.Length - 4];
-                var price = eleTin[eleTin.Length - 5];
+                var rawData = Data.Text;
+                var content = "";
+                var price = "";
+                var area = "";
+                var category = driver.FindElement(By.Id("Cat")).FindElement(By.XPath("//option[@selected='selected']")).Text;
+                var phone = "";
+                var address = "";
+                var province = driver.FindElement(By.Id("City")).Text;
+                var ward = "";
+                var district = "";
+                var title = "";
+                var eleContent = rawData.Split(new[] { "\n" }, StringSplitOptions.None);
+                var createDate = eleContent[0];
+                var type = eleContent[1];
+                title = eleContent[2];
 
-                var type = "";
-                if (newUrl.Contains("thue"))
-                    type = "Tin cho thuê";
-                else
+                for (int i = 3; i < eleContent.Length; i++)
                 {
-                    type = "Tin bán nhà";
+                    content += eleContent[i] + "\n";
+                    if (eleContent[i].Contains("Khu vực"))
+                    {
+                        district = eleContent[i].Split(new[] { "Khu vực" }, StringSplitOptions.None)[1].Trim();
+                    }
+                    else if (eleContent[i].Contains("KV:"))
+                    {
+                        return;
+                        //district += eleContent[i].Split(new[] { "KV:" }, StringSplitOptions.None)[1].Trim().Split(new[] { "LH" }, StringSplitOptions.None)[0].Trim() + "\n";
+                        //try
+                        //{
+                        //    phone += eleContent[i].Split(new[] { "LH:" }, StringSplitOptions.None)[1].Trim() + "\n";
+                        //}
+                        //catch
+                        //{
+
+                        //}
+                    }else if (eleContent[i].Contains("Liên hệ") && !eleContent[i].Contains("@"))
+                    {
+                        phone = eleContent[i].Split(new[] { "Liên hệ" }, StringSplitOptions.None)[1].Substring(0, 11).Trim();
+                    }
+                    else if (eleContent[i].Contains("Giá"))
+                    {
+                        price = eleContent[i].Split(new[] { "Giá" }, StringSplitOptions.None)[1].Trim();
+                    }
+                    else if (eleContent[i].Contains("Diện tích"))
+                    {
+                        area = eleContent[i].Split(new[] { "Diện tích" }, StringSplitOptions.None)[1].Trim();
+                    }
+                    else
+                    {
+                        
+                    }
                 }
 
-                //tempEle = driver.FindElements(By.XPath("//select[@class='form-control tinh']"))[1];
-                //SelectElement selectProvince = new SelectElement(tempEle);
-                //var province = selectProvince.SelectedOption.Text;
-                //tempEle = driver.FindElements(By.XPath("//select[@class='form-control quan']"))[1];
-                //SelectElement selectDistrict = new SelectElement(tempEle);
-                //var district = selectDistrict.SelectedOption.Text;
-                //tempEle = driver.FindElements(By.XPath("//select[@class='form-control huyen']"))[1];
-                //SelectElement selectWard = new SelectElement(tempEle);
-                //var ward = selectWard.SelectedOption.Text;
+                content = content.Split(new[] { "URL" }, StringSplitOptions.None)[0];
 
-                //var createDate = driver.FindElements(By.XPath("//p[@class='small text-right']"))[0].Text.Split(new[] { "Mã tin" }, StringSplitOptions.None)[0].Trim();
-                //var lsPContent = driver.FindElements(By.XPath("//p"));
-                //var content = "";
-                //foreach (var p in lsPContent)
-                //{
-                //    content += p.Text.Trim() + "<br>";
-                //}
-                //content = content.Replace("\r\n", "<br>").Split(new string[] { "Ngày " }, StringSplitOptions.None)[0];
+                var bodyTitle = $"\"title\":\"{title.Split('-')[0].Replace("\n", "").Replace("\r", "")}\",";
+                var bodyContent = $"\"content\":\"{content.Trim().Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyPrice = $"\"price\":\"{price.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyArea = $"\"area\":\"{area.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyCreateDate = $"\"createDate\":\"{createDate.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyType = $"\"type\":\"{type.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyCategory = $"\"category\":\"{category.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyAddress = $"\"address\":\"{address.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyPhone = $"\"phone\":\"{phone.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyProvince = $"\"province\":\"{province.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyWard = $"\"ward\":\"{ward.Replace("\n", "").Replace("\r", "<br>")}\",";
+                var bodyDistrict = $"\"district\":\"{district.Replace("\n", "").Replace("\r", "<br>")}\"";
 
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        if (linkAPI1 != null && linkAPI1 != "")
+                        {
+                            var client = new RestClient(linkAPI1);
+                            var request = new RestRequest(Method.POST);
+                            request.AddHeader("Content-Type", "application/json");
+                            //var body = sendData;// "[" + DictionaryToString(data) + "]" ;
+                            var body = "[{" + bodyAddress + bodyArea + bodyCategory + bodyTitle + bodyContent + bodyPrice + bodyPhone + bodyCreateDate + bodyType + bodyProvince + bodyWard + bodyDistrict + "}]";
+                            //Console.WriteLine(body);
+                            body = body.Replace("<br>", "<p>");
+                            request.AddParameter("application/json", body, ParameterType.RequestBody);
+                            IRestResponse response = client.Execute(request);
+                            Console.WriteLine(response.Content);
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                m_oWorker.ReportProgress(0, bodyTitle);
+                            }
+                            else
+                            {
+                                m_oWorker.ReportProgress(1, bodyTitle);
+                            }
+                        }
+                    }
+                    catch { }
+                });
 
-                //content += "<br>" + "Diện tích: " + area;
-                //content += "<br>" + "Địa chỉ: " + address;
-                //try
-                //{
-                //    driver.FindElements(By.XPath("//button[@class='btn btn-show-phone']"))[0].Click();
-                //    Thread.Sleep(1000);
-                //}
-                //catch { }
-
-
-                //var bodyUrl = $"\"url\":\"{newUrl}\",";
-                //var bodyTitle = $"\"title\":\"{title.Split('-')[0]}\",";
-                //var bodyContent = $"\"content\":\"{content.Trim()}\",";
-                ////var bodyContent = $"\"content\":\"tesst\",";
-                //var bodyPrice = $"\"price\":\"{price}\",";
-                //var bodyArea = $"\"area\":\"{area}\",";
-                //var bodyCreateDate = $"\"createDate\":\"{createDate}\",";
-                //var bodyType = $"\"type\":\"{type}\",";
-                //var bodyCategory = $"\"category\":\"{category}\",";
-                //var bodyAddress = $"\"address\":\"{address}\",";
-                //var bodyPhone = $"\"phone\":\"{phone}\",";
-                //var bodyProvince = $"\"province\":\"{province}\",";
-                //var bodyWard = $"\"ward\":\"{ward}\",";
-                //var bodyDistrict = $"\"district\":\"{district}\"";
-                //Task.Run(() =>
-                //{
-                //    try
-                //    {
-                //        if (linkAPI1 != null && linkAPI1 != "")
-                //        {
-                //            var client = new RestClient(linkAPI1);
-                //            var request = new RestRequest(Method.POST);
-                //            request.AddHeader("Content-Type", "application/json");
-                //            //var body = sendData;// "[" + DictionaryToString(data) + "]" ;
-                //            var body = "[{" + bodyUrl + bodyAddress + bodyArea + bodyCategory + bodyTitle + bodyContent + bodyPrice + bodyPhone + bodyCreateDate + bodyType + bodyProvince + bodyWard + bodyDistrict + "}]";
-                //            //Console.WriteLine(body);
-                //            request.AddParameter("application/json", body, ParameterType.RequestBody);
-                //            IRestResponse response = client.Execute(request);
-                //            Console.WriteLine(response.Content);
-                //            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                //            {
-                //                m_oWorker.ReportProgress(0, url);
-                //            }
-                //            else
-                //            {
-                //                m_oWorker.ReportProgress(1, url);
-                //            }
-                //        }
-                //    }
-                //    catch { }
-                //});
-
-                //Task.Run(() =>
-                //{
-                //    try
-                //    {
-                //        if (linkAPI2 != null && linkAPI2 != "")
-                //        {
-                //            var client = new RestClient(linkAPI2);
-                //            var request = new RestRequest(Method.POST);
-                //            request.AddHeader("Content-Type", "application/json");
-                //            //var body = sendData;// "[" + DictionaryToString(data) + "]" ;
-                //            var body = "[{" + bodyUrl + bodyAddress + bodyArea + bodyCategory + bodyTitle + bodyContent + bodyPrice + bodyPhone + bodyCreateDate + bodyType + bodyProvince + bodyDistrict + "}]";
-                //            //Console.WriteLine(body);
-                //            request.AddParameter("application/json", body, ParameterType.RequestBody);
-                //            IRestResponse response = client.Execute(request);
-                //            Console.WriteLine(response.Content);
-                //            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                //            {
-                //                m_oWorker.ReportProgress(3, url);
-                //            }
-                //            else
-                //            {
-                //                m_oWorker.ReportProgress(4, url);
-                //            }
-                //        }
-                //    }
-                //    catch
-                //    {
-                //    }
-                //});
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        if (linkAPI2 != null && linkAPI2 != "")
+                        {
+                            var client = new RestClient(linkAPI2);
+                            var request = new RestRequest(Method.POST);
+                            request.AddHeader("Content-Type", "application/json");
+                            //var body = sendData;// "[" + DictionaryToString(data) + "]" ;
+                            var body = "[{" + bodyAddress + bodyArea + bodyCategory + bodyTitle + bodyContent + bodyPrice + bodyPhone + bodyCreateDate + bodyType + bodyProvince + bodyDistrict + "}]";
+                            //Console.WriteLine(body);
+                            request.AddParameter("application/json", body, ParameterType.RequestBody);
+                            IRestResponse response = client.Execute(request);
+                            Console.WriteLine(response.Content);
+                            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                m_oWorker.ReportProgress(3, bodyTitle);
+                            }
+                            else
+                            {
+                                m_oWorker.ReportProgress(4, bodyTitle);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                });
             }
             catch { }
 
@@ -519,14 +502,10 @@ namespace CrawlWebBDS
 
         public static void WaitLoginScrape(ChromeDriver driver, BackgroundWorker m_oWorker, int type, string tinhTP)
         {
-            var url = "https://salenha.com/";
+            var url = "https://nhachinhchu.com.vn/";
             var fileCookie = $"cookiesBackup_{tinhTP}.txt";
-            if (type == 2)
-            {
-                url = "https://salenha.com/cho-thue";
-                fileCookie = $"cookiesBackupThue_{tinhTP}.txt";
-            }
-            var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP", fileCookie);
+            
+            var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", fileCookie);
             if (File.Exists(fileBackup))
             {
                 driver.Navigate().GoToUrl(url);
@@ -546,28 +525,36 @@ namespace CrawlWebBDS
                     }
                 }
             }
-            driver.Navigate().GoToUrl(url);
+            driver.Navigate().GoToUrl("https://nhachinhchu.com.vn/product");
+
             while (true)
             {
                 m_oWorker.ReportProgress(6, "");
+                Thread.Sleep(3000);
+                try
+                {
+                    var logOut = driver.FindElement(By.Id("logoutForm"));
+                    if (logOut == null)
+                    {
+                        AutoLogin(driver, tinhTP);
+                    }
+                }
+                catch { AutoLogin(driver, tinhTP); }
+
                 if (runScrape == false)
                 {
                     throw new Exception("Dừng chương trình");
                 }
                 try
                 {
-                    var login = driver.FindElement(By.XPath("//span[@class='glyphicon glyphicon-log-in']"));////span[@class='glyphicon glyphicon-log-in']
-                    Thread.Sleep(2 * 1000);
+                    var logOut = driver.FindElement(By.Id("logoutForm"));
+                    getCookie(driver, type, tinhTP);
+                    break;
                 }
                 catch
                 {
-                    if (driver.Url.Contains("login"))
-                    {
-                        Thread.Sleep(2000);
-                        continue;
-                    }
-                    getCookie(driver, type, tinhTP);
-                    break;
+                    Thread.Sleep(2000);
+                    continue;
 
                 }
 
@@ -576,14 +563,10 @@ namespace CrawlWebBDS
 
         public static void WaitLoginAuto(ChromeDriver driver, BackgroundWorker m_oWorker, int type, string tinhTP)
         {
-            var url = "https://salenha.com/";
+            var url = "https://nhachinhchu.com.vn/";
             var fileCookie = $"cookiesBackup_{tinhTP}.txt";
-            if (type == 2)
-            {
-                url = "https://salenha.com/cho-thue";
-                fileCookie = $"cookiesBackupThue_{tinhTP}.txt";
-            }
-            var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP", fileCookie);
+
+            var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", fileCookie);
             if (File.Exists(fileBackup))
             {
                 driver.Navigate().GoToUrl(url);
@@ -603,80 +586,236 @@ namespace CrawlWebBDS
                     }
                 }
             }
-            driver.Navigate().GoToUrl(url);
+            driver.Navigate().GoToUrl("https://nhachinhchu.com.vn/product");
+
             while (true)
             {
                 m_oWorker.ReportProgress(6, "");
+                Thread.Sleep(3000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                try
+                {
+                    var logOut = driver.FindElement(By.Id("logoutForm"));
+                    if (logOut == null)
+                    {
+                        AutoLogin(driver, tinhTP);
+                    }
+                }
+                catch { AutoLogin(driver, tinhTP); }
+
                 if (runAuto == false)
                 {
                     throw new Exception("Dừng chương trình");
                 }
-
                 try
                 {
-                    if (!driver.Url.Contains("login"))
-                    {
-                        getCookie(driver, type, tinhTP);
-                        break;
-                    }
+                    var logOut = driver.FindElement(By.Id("logoutForm"));
+                    getCookie(driver, type, tinhTP);
+                    break;
                 }
                 catch
                 {
-                }
-                Thread.Sleep(2 * 1000);
-            }
+                    Thread.Sleep(2000);
+                    continue;
 
+                }
+
+            }
 
         }
 
         public static void getCookie(ChromeDriver driver, int type, string tinhTP)
         {
-            if (type == 1)
+            try
             {
-                try
-                {
-                    // Get All available cookies
-                    var lsCookies = driver.Manage().Cookies.AllCookies;
-                    cookies_ban = "";
+                // Get All available cookies
+                var lsCookies = driver.Manage().Cookies.AllCookies;
+                cookies_ban = "";
 
-                    foreach (var cookie in lsCookies)
-                    {
-                        cookies_ban += cookie.ToString().Split(';')[0] + ";";
-                        var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", $"cookiesBackup_{tinhTP}.txt");
-                        File.WriteAllText(fileBackup, cookies_ban);
-                    }
-                    cookies_ban = "";
-                }
-                catch (Exception ex)
+                foreach (var cookie in lsCookies)
                 {
-                    cookies_ban = "";
-
+                    cookies_ban += cookie.ToString().Split(';')[0] + ";";
+                    var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", $"cookiesBackup_{tinhTP}.txt");
+                    File.WriteAllText(fileBackup, cookies_ban);
                 }
+                cookies_ban = "";
             }
-            else if (type == 2)
+            catch (Exception ex)
             {
-
-                try
-                {
-                    // Get All available cookies
-                    var lsCookies = driver.Manage().Cookies.AllCookies;
-                    cookies_thue = "";
-
-                    foreach (var cookie in lsCookies)
-                    {
-                        cookies_thue += cookie.ToString().Split(';')[0] + ";";
-                        var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", $"cookiesBackupThue_{tinhTP}.txt");
-                        File.WriteAllText(fileBackup, cookies_thue);
-                    }
-                    cookies_thue = "";
-                }
-                catch (Exception ex)
-                {
-                    cookies_thue = "";
-
-                }
+                cookies_ban = "";
 
             }
+
+
+            //if (type == 1)
+            //{
+            //    try
+            //    {
+            //        // Get All available cookies
+            //        var lsCookies = driver.Manage().Cookies.AllCookies;
+            //        cookies_ban = "";
+
+            //        foreach (var cookie in lsCookies)
+            //        {
+            //            cookies_ban += cookie.ToString().Split(';')[0] + ";";
+            //            var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", $"cookiesBackup_{tinhTP}.txt");
+            //            File.WriteAllText(fileBackup, cookies_ban);
+            //        }
+            //        cookies_ban = "";
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        cookies_ban = "";
+
+            //    }
+            //}
+            //else if (type == 2)
+            //{
+
+            //    try
+            //    {
+            //        // Get All available cookies
+            //        var lsCookies = driver.Manage().Cookies.AllCookies;
+            //        cookies_thue = "";
+
+            //        foreach (var cookie in lsCookies)
+            //        {
+            //            cookies_thue += cookie.ToString().Split(';')[0] + ";";
+            //            var fileBackup = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA", $"cookiesBackupThue_{tinhTP}.txt");
+            //            File.WriteAllText(fileBackup, cookies_thue);
+            //        }
+            //        cookies_thue = "";
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        cookies_thue = "";
+
+            //    }
+
+            //}
         }
 
         public static bool CheckLogin(ChromeDriver driver)
@@ -692,6 +831,50 @@ namespace CrawlWebBDS
                 dictionaryString += keyValues.Key + " : " + keyValues.Value + ", ";
             }
             return dictionaryString.TrimEnd(',', ' ') + "}";
+        }
+
+
+
+        public static bool AutoLogin(ChromeDriver driver, string tinhTP)
+        {
+            string user = "";
+            string pass = "";
+            string targetUrl = "https://nhachinhchu.com.vn/member/login";
+            if (tinhTP.Contains("HN"))
+            {
+                user = userHN;
+                pass = passHN;
+
+            }
+            else
+            {
+                user = userHCM;
+                pass = passHCM;
+
+            }
+            try
+            {
+                driver.Navigate().GoToUrl(targetUrl);
+                Thread.Sleep(2 * 1000);
+                driver.FindElement(By.Id("LoginEmail")).SendKeys(user);
+                Thread.Sleep(1000);
+                driver.FindElement(By.Id("LoginPassword")).SendKeys(pass);
+                Thread.Sleep(1000);
+
+                driver.FindElement(By.Id("btnLogin")).Click();
+                Thread.Sleep(6000);
+                if (driver.Url.Contains("login"))
+                {
+                    throw new Exception();
+                }
+
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

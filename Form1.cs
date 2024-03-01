@@ -2015,20 +2015,20 @@ namespace CrawlWebBDS
         void defaultSetting_SALENHA_VIP()
         {
             dataGridViewNotification_SALENHA_VIP.RowHeadersVisible = false;
-            var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP");
+            var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN");
 
             if (!Directory.Exists(pathStringFolder))
             {
                 Directory.CreateDirectory(pathStringFolder);
             }
-            var fileSetting = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP", "Setting.txt");
-            var fileStatus = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP", "status.txt");
+            var fileSetting = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", "Setting.txt");
+            var fileStatus = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", "status.txt");
             if (File.Exists(fileStatus))
             {
                 var data = File.ReadAllText(fileStatus);
                 StatusTBox_SALENHA_VIP.Text = data;
             }
-            var fileStatusAuto = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP", "status_auto.txt");
+            var fileStatusAuto = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN", "status_auto.txt");
             if (File.Exists(fileStatusAuto))
             {
                 var data = File.ReadAllText(fileStatusAuto);
@@ -2110,6 +2110,15 @@ namespace CrawlWebBDS
                     TKHCMCBox_SALENHA_VIP.Checked = true;
                 else
                     TKHCMCBox_SALENHA_VIP.Checked = false;
+                try
+                {
+                    userHNTBox_NhaChinhChuComVn.Text = eleData[25];
+                    passHNTBox_NhaChinhChuComVn.Text = eleData[26];
+                    userHCMTBox_NhaChinhChuComVn.Text = eleData[27];
+                    passHCMTBox_NhaChinhChuComVn.Text = eleData[28];
+                }
+                catch { }
+
 
                 CrawlSALENHA_VIP.linkAPI1 = linkAPITBox1_SALENHA_VIP.Text;
                 CrawlSALENHA_VIP.linkAPI2 = linkAPITBox2_SALENHA_VIP.Text;
@@ -2171,7 +2180,7 @@ namespace CrawlWebBDS
                 StatusTBox_SALENHA_VIP.Text = "chạy xong thủ công lúc: " + dt.ToShortTimeString() + " - " + dt.ToShortDateString();
                 scrapeStartBtn_SALENHA_VIP.Enabled = true;
                 scrapeStopBtn_SALENHA_VIP.Enabled = false;
-                var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP");
+                var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN");
                 if (!Directory.Exists(pathStringFolder))
                 {
                     Directory.CreateDirectory(pathStringFolder);
@@ -2248,7 +2257,7 @@ namespace CrawlWebBDS
                 autoStatusTBox_SALENHA_VIP.Text = "chạy xong tự động lúc: " + dt.ToShortTimeString() + " - " + dt.ToShortDateString();
                 autoStartBtn_SALENHA_VIP.Enabled = true;
                 autoStopBtn_SALENHA_VIP.Enabled = false;
-                var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP");
+                var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN");
                 if (!Directory.Exists(pathStringFolder))
                 {
                     Directory.CreateDirectory(pathStringFolder);
@@ -2317,6 +2326,13 @@ namespace CrawlWebBDS
             scrapeStartBtn_SALENHA_VIP.Enabled = false;
             scrapeStopBtn_SALENHA_VIP.Enabled = true;
 
+            CrawlSALENHA_VIP.userHN = userHNTBox_NhaChinhChuComVn.Text;
+            CrawlSALENHA_VIP.passHN = passHNTBox_NhaChinhChuComVn.Text;
+
+            CrawlSALENHA_VIP.userHCM = userHCMTBox_NhaChinhChuComVn.Text;
+            CrawlSALENHA_VIP.passHCM = passHCMTBox_NhaChinhChuComVn.Text;
+
+
             CrawlSALENHA_VIP.linkAPI1 = linkAPITBox1_SALENHA_VIP.Text;
             CrawlSALENHA_VIP.linkAPI2 = linkAPITBox2_SALENHA_VIP.Text;
             //scrape
@@ -2365,6 +2381,12 @@ namespace CrawlWebBDS
         {
             autoStartBtn_SALENHA_VIP.Enabled = false;
             autoStopBtn_SALENHA_VIP.Enabled = true;
+
+            CrawlSALENHA_VIP.userHN = userHNTBox_NhaChinhChuComVn.Text;
+            CrawlSALENHA_VIP.passHN = passHNTBox_NhaChinhChuComVn.Text;
+
+            CrawlSALENHA_VIP.userHCM = userHCMTBox_NhaChinhChuComVn.Text;
+            CrawlSALENHA_VIP.passHCM = passHCMTBox_NhaChinhChuComVn.Text;
 
             CrawlSALENHA_VIP.linkAPI1 = linkAPITBox1_SALENHA_VIP.Text;
             CrawlSALENHA_VIP.linkAPI2 = linkAPITBox2_SALENHA_VIP.Text;
@@ -2473,13 +2495,20 @@ namespace CrawlWebBDS
             var tkHN = TKHNCBox_SALENHA_VIP.Checked ? "1" : "0";
             var tkHCM = TKHCMCBox_SALENHA_VIP.Checked ? "1" : "0";
 
+            var userHN = userHNTBox_NhaChinhChuComVn.Text;
+            var passHN = passHNTBox_NhaChinhChuComVn.Text;
+
+            var userHCM = userHCMTBox_NhaChinhChuComVn.Text;
+            var passHCM = passHCMTBox_NhaChinhChuComVn.Text;
+
             var data = svAutoFromPage + "|" + svAutoToPage + "|" + svautoStartTime + "|" + svautoStopTime + "|" + svT2 + "|" + svT3 + "|"
                 + svT4 + "|" + svT5 + "|" + svT6 + "|" + svT7 + "|" + svCN + "|" + svautoTimeGetNew + "|"
                 + svcheckLoginTime + "|" + svautoHNCBox + "|" + svautoHCMCBox + "|" + svscrapeToPage + "|" + svscrapeFromPage + "|" + svHNCBox + "|"
                 + svHCMCBox + "|" + svtimeBetweenNewFrom + "|" + svtimeBetweenNewTo + "|" + svlinkAPITBox1 + "|" + svlinkAPITBox2
-                 + "|" + tkHN + "|" + tkHCM;
+                 + "|" + tkHN + "|" + tkHCM
+                 + "|" + userHN + "|" + passHN + "|" + userHCM + "|" + passHCM;
 
-            var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SALENHA_VIP");
+            var pathStringFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NHACHINHCHU_COM_VN");
             if (!Directory.Exists(pathStringFolder))
             {
                 Directory.CreateDirectory(pathStringFolder);
